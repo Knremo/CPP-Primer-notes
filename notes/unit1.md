@@ -19,14 +19,24 @@ Unix:`demo <infile`
 # others
 ## Git
 `git config user.name '你的名字' -g`
+
 `git congif user.email '你的邮箱' -g`
+
 `git init` //新建仓库
+
 `git add README.md` //索引
+
 `git commit -m "first commit"` //提交
+
 `git remote add origin git@github.com:plusczh/vscode-demo.git` //远程仓库
+
 `git push -u origin master` //push
+
 `git pull origin master` //pull
+
 `ssh-kegen -t rsa -b 4096 -C "email"`
+
 `cat ~/.ssh/id_rsa.pub` //SSH key
+
 ## Github
 忽略的文件和文件夹名添加到`.gitignore`
