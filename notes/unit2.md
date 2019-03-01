@@ -70,6 +70,7 @@ std::cout << "c1"
 ```
 
 `'\115' or '\x4d'` = `'M'`
+`\u5359`
 
 ### 指定字面值类型
 |前缀|类型|
@@ -86,3 +87,69 @@ std::cout << "c1"
 |ll or LL|long long|
 |f or F|float|
 |l or L|long double|
+
+# 2.2 变量
+## 2.2.1 变量定义
+初始化和赋值不同
+
+定义在函数体内部的内置类型变量将不被初始化，值是未定义.
+
+## 2.2.2 变量声明和定义的关系
+`extern int i;` //声明
+
+## 2.2.3 标识符
+以字母，下划线开头.自定义标识符不能出现连续两个下划线，也不能以下划线紧连大写字母开头，定义在函数体外的标识符不能以下划线开头。
+
+## 2.2.4 名字的作用域
+允许内层作用域中重新定义外层作用域已有的名字。
+
+# 2.3 复合类型
+## 2.3.1 引用
+
+```c++
+int ival = 1024;
+int &refVal = ival;
+```
+
+## 2.3.2 指针
+
+```c++
+double dval;
+double *pd = &dval;
+double *pd2 = pd;
+
+int ival = 42;
+int *p = &ival;
+cout << *p;  //解引用符
+```
+
+```c++
+int i = 42;
+int &r = i;     //声明，引用
+int *p;         //声明，指针
+p = &i;         //表达式，取地址符
+*p = i;         //表达式，解引用符
+int &r2 = *p;   //&是声明的一部分，*是解引用符
+```
+
+### 空指针
+```c++
+int *p1 = nullptr;
+int *p2 = 0;
+```
+### void* 指针
+### 指向指针的指针
+### 指向指针的引用
+```c++
+int *p;
+int *&r = p;
+```
+
+# 2.4 const 限定符
+`const int bufSize = 512;`
+
+多个文件共享
+```c++
+extern const int bufSize = fcn(); //file.cpp
+extern const int bufSize;       //file.h
+```
