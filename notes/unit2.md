@@ -153,3 +153,13 @@ int *&r = p;
 extern const int bufSize = fcn(); //file.cpp
 extern const int bufSize;       //file.h
 ```
+
+## 2.4.1 const的引用
+```c++
+const int ci = 1024;
+const int &r1 = ci; //right
+r1 = 42; //wrong
+int &r2 = ci; //wrong
+```
+
+## 2.4.2 指针和const
