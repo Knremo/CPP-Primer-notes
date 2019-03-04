@@ -163,3 +163,23 @@ int &r2 = ci; //wrong
 ```
 
 ## 2.4.2 指针和const
+### 指向常量的指针
+```c++
+const double pi = 3.14;
+double *ptr = &pi;  //wrong
+const double *cptr = &pi;   //right
+*cptr = 42; //wrong
+```
+允许一个指向常量的指针指向一个非常量对象
+```c++
+double dval = 3.14;
+cptr = &dval;   //right
+```
+
+### 常量指针
+```c++
+int errNumb = 0;
+int *const curErr = &errNumb;
+const double pi = 3.14159;
+const double *const pip = &pi;
+```
