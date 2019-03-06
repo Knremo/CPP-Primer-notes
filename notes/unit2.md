@@ -105,10 +105,12 @@ std::cout << "c1"
 
 # 2.3 复合类型
 ## 2.3.1 引用
-
+必须初始化
 ```c++
 int ival = 1024;
 int &refVal = ival;
+
+int &refVal = 10; //wrong, 引用必须是一个对象，左值引用
 ```
 
 ## 2.3.2 指针
@@ -160,6 +162,8 @@ const int ci = 1024;
 const int &r1 = ci; //right
 r1 = 42; //wrong
 int &r2 = ci; //wrong
+
+const int &r = 0; //right
 ```
 
 ## 2.4.2 指针和const
@@ -182,4 +186,98 @@ int errNumb = 0;
 int *const curErr = &errNumb;
 const double pi = 3.14159;
 const double *const pip = &pi;
+```
+
+## 2.4.3 顶层const
+
+## 2.4.4 constexpr和常量表达式
+### constexpr变量
+
+```c++
+constexpr int mf = 20;
+constexpr int limit = mf + 1;
+constexpr int sz = size();   //size是一个constexpr函数
+```
+### 字面值类型
+算术类型，引用，指针
+
+### 指针和constexpr
+```c++
+const int *p = nullptr; //指向常量的指针
+constexpr int *p = nullptr; //常量指针
+```
+
+```c++
+constexpr int *np = nullptr;
+int j = 0;
+constexpr int i = 42;
+
+//i和j都必须定义在函数体外
+constexpr const int *p = &i;
+constexpr int *p1 = &j;
+```
+# 2.5 处理类型
+## 2.5.1 类型别名
+### 类型别名
+1. typedef 
+```c++
+typedef double wages;
+typedef wages base, *p; //base是double的同义词，p是double*的同义词.
+```
+
+2. 别名声明
+```c++
+using SI = Sales_item;
+```
+### 指针、常量和类型别名
+```c++
+typedef char *pstring;
+const pstring cstr = 0;  //指向char的常量指针，而非指向常量字符的指针
+const pstring *ps; //指向char的常量指针的指针
+```
+## 2.5.2 auto类型说明符
+auto定义的变量必须有初始值
+`auto i = 0, *p = &i;`
+
+### 复合类型、常量和auto
+以引用对象的类型作为auto的类型
+```c++
+int i = 0, &r = i;
+auto a = r;  //a is int
+```
+auto一般会忽略顶层const，底层const会保留
+```c++
+const int ci = i, &cr = ci;
+auto b = ci; // int b = ci;
+auto c = cr;// c int
+auto d = &i; //int pointer
+auto e = &ci; //const int pointer
+```
+需要顶层const
+```c++
+const auto f = ci; //f : const int
+```
+将引用的类型设为auto
+```c++
+auto &g = ci; //整型常量的引用
+auto &h = 42; //wrong,不能为非常量引用绑定字面值
+const auto &j = 42; //right
+```
+## 2.5.3 decltype类型指示符
+```c++
+const int ci = 0, &cj = ci;
+decltype(ci) x = 0; //x: const int
+decltype(cj) y = x; //y: const int&
+decltype(cj) z; //wrong,z是一个引用，必须初始化
+```
+### decltype和引用
+```c++
+int i = 42, *p = &i, &r = i;
+decltype(r+0) b; //right,r+0这个表达式的结果将是一个具体指而不是引用，所以r+0是int
+decltype(*p) c; //wrong,解引用将得到引用类型，c是int&，必须初始化
+```
+变量加括号结果是引用
+```c++
+decltype((i)) d; //wrong,int&，必须初始化
+decltype(i) e; //right,int
 ```
