@@ -281,3 +281,17 @@ decltype(*p) c; //wrong,解引用将得到引用类型，c是int&，必须初始
 decltype((i)) d; //wrong,int&，必须初始化
 decltype(i) e; //right,int
 ```
+
+# 2.6 自定义数据结构
+## 2.6.1 定义Sales_data类型
+```c++
+struct Sales_data{
+    std::string bookNo;
+    unsigned units_sold = 0;
+    double revenue = 0.0;
+};
+```
+### 类数据成员
+没有初始值的成员将被默认初始化
+
+初始值不能使用圆括号
