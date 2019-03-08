@@ -295,3 +295,19 @@ struct Sales_data{
 没有初始值的成员将被默认初始化
 
 初始值不能使用圆括号
+
+## 2.6.2 使用Sales_data类
+
+## 2.6.3 编写自己的头文件
+### 预处理器概述
+头文件保护符
+
+```c++
+#ifndef SALES_DATA_H
+#define SALES_DATA_H
+#include <string>
+struct Sales_data {
+    ...
+};
+#endif
+```
