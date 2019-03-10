@@ -65,3 +65,14 @@ string str("some string");
 for (auto c : str)
     cout << c << endl;
 ```
+### 只处理一部分字符
+下标运算符,string::size_type类型
+
+`s[0]`
+
+### 使用下标执行迭代
+```c++
+for (decltype(s.size()) index = 0;
+    index != s.size() && !isspace(s[index]); ++index)
+        s[index] = toupper(s[index]);
+```
