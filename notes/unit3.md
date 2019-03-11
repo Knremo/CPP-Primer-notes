@@ -62,9 +62,11 @@ toupper(c) //变大写
 ### 范围for
 ```c++
 string str("some string");
-for (auto c : str)
+for (auto c : str) //c: char
     cout << c << endl;
 ```
+`for(auto &c:str)`
+
 ### 只处理一部分字符
 下标运算符,string::size_type类型
 
@@ -76,3 +78,27 @@ for (decltype(s.size()) index = 0;
     index != s.size() && !isspace(s[index]); ++index)
         s[index] = toupper(s[index]);
 ```
+
+### 使用下标执行随机访问
+```c++
+const string hexdigits = "0123456789ABCDEF";
+string result;
+string::size_type n;
+while(cin >> n)
+    if (n < hexdigits.size())
+        result += hexdigits[n];
+cout << result << endl;
+```
+
+# 3.3 标准库类型vector
+```c++
+#include <vector>
+using std::vector;
+```
+类模板
+```c++
+vector<int> ivec;
+```
+不包含引用
+
+## 3.3.1 定义和初始化vector对象
