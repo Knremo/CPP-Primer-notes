@@ -102,3 +102,15 @@ vector<int> ivec;
 不包含引用
 
 ## 3.3.1 定义和初始化vector对象
+```c++
+vector<T> v1; //空vector,默认初始化
+vector<T> v2(v1); //v2中包含v1所有元素的副本
+vector<T> v2 = v1; //等价于v2(v1),v2中包含有v1所有元素的副本
+vector<T> v3(n, val); //n个重复元素
+vector<T> v4(n); //n个重复执行了值初始化的对象
+vector<T> v5{a,b,c...};
+vector<T> v5={a,b,c...};
+```
+拷贝元素类型需相同
+
+### 列表初始化vector对象
