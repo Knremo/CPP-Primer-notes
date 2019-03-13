@@ -114,3 +114,25 @@ vector<T> v5={a,b,c...};
 拷贝元素类型需相同
 
 ### 列表初始化vector对象
+
+## 3.3.2 向vector对象中添加元素
+```c++
+vector<int> v2;
+for (int i = 0; i != 100; ++i)
+    v2.push_back(i);
+```
+## 3.3.3 其他vector操作
+```c++
+v.empty()
+v.size()
+v.push_back()
+v[in]
+v1 = v2
+v1 = {a,b,c...}
+== != < <=
+```
+`vector<int>::size_type`
+
+不能用下标形式添加元素
+
+# 3.4 迭代器介绍
