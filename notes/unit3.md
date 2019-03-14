@@ -136,3 +136,17 @@ v1 = {a,b,c...}
 不能用下标形式添加元素
 
 # 3.4 迭代器介绍
+
+## 3.4.1 使用迭代器
+```c++
+auto b = v.begin(), e = v.end();
+```
+### 迭代器运算符
+```c++
+*iter //返回迭代器iter所指元素的引用
+iter->mem //(*iter).mem
+++iter
+--iter
+iter1 == iter2
+iter1 != iter2
+```
