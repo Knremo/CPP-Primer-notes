@@ -150,3 +150,53 @@ iter->mem //(*iter).mem
 iter1 == iter2
 iter1 != iter2
 ```
+```c++
+string s("some string");
+if (s.begin() != s.end())
+{ 
+    auto it = s.begin();
+    *it = toupper(*it);
+}
+```
+
+### 移动迭代器
+```c++
+for (auto it = s.begin(); it != s.end() && !isspace(*it); ++it)
+    *it = toupper(*it);
+```
+
+### 迭代器类型
+```c++
+vector<int>::iterator it;
+vector<int>::const_iterator it2;
+```
+
+### begin和end的返回值类型
+如果不是常量，返回`iterator`
+
+`cbegin,cend`返回`const_iterator`类型
+
+### 箭头运算符
+`it->mem` = `(*it).mem`
+
+### 迭代器失效
+不要在循环中向迭代器所属的容器添加元素
+
+## 3.4.2 迭代器运算
+string和vector
+
+```c++
+iter+n //向前移动n
+iter-n //向后移动n，或结尾元素下一位置
+iter1 += n 
+iter1 - iter2 //距离
+>, >=, <, <=
+```
+
+### 迭代器的算术运算
+距离类型`difference_type`
+
+### 使用迭代器运算
+```c++
+auto mid = text.begin() + (end - beg)/2;
+```
