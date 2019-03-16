@@ -200,3 +200,23 @@ iter1 - iter2 //距离
 ```c++
 auto mid = text.begin() + (end - beg)/2;
 ```
+
+# 3.5 数值
+## 3.5.1 定义和初始化内置数组
+```c++
+unsigned cnt = 42; //不是常量表达式
+constexpr unsigned sz = 42; //常量表达式
+int arr[10];
+int *parr[sz]; //right
+string bad[cnt]; //wrong
+string strs[get_size()]; //constexpr function
+```
+### 显式初始化数组元素
+```c++
+string a4[3] = {"hi", "bye"};
+```
+### 字符数组的特殊性
+```c++
+char a3[] = "C++";
+```
+### 不允许拷贝和赋值
