@@ -236,3 +236,64 @@ int *(&arry)[10] = ptrs; //arry是数组的引用，该数组含有10个指针
 范围for
 
 ## 3.5.3 指针和数组
+```c++
+string *p = &nums[0];
+string *p2 = nums;     //等价
+
+int ia[] = {0,1,2,3,4,5,6,7,8,9};
+auto ia2(ia);  //ia2是一个整型指针，指向ia的第一个元素
+
+decltype(ia) ia3 = {0,1,2,3,4,5,6,7,8,9}; //返回的类型是由10个整数构成的数组
+```
+
+### 指针也是迭代器
+```c++
+++p;
+```
+### 标准库函数begin和end
+```c++
+int ia[] = {0,1,2,3,4,5,6,7,8,9};
+int *beg = begin(ia);
+int *last = end(ia);  //c++11
+```
+定义在iterator头文件
+
+### 指针运算
+同迭代器运算
+
+两个指针相减的结果的类型`ptrdiff_t`,定义在`cstddef`头文件
+
+### 解引用和指针运算的交互
+
+### 下标和指针
+```c++
+int k = p[-2]; 
+```
+内置的下标运算符所用的索引值不是无符号整数，与vector,string不同
+
+## 3.5.4 C风格字符串
+字符数组
+
+### C标准库String函数
+```c++
+#include <cstring>
+strlen(p); //不算空字符
+strcmp(p1, p2); //p1==p2,0;p1>p2,+;p1<p2,-;
+strcat(p1, p2); //将p2附到p1之后，返回p1
+strcpy(p1, p2); //p2拷贝给p1，返回p1
+```
+必须以空字符结束
+
+## 3.5.5 与旧代码的接口
+### 混用string对象与C风格字符串
+```c++
+string s("Hello world");
+const char *str = s.c_str();
+```
+
+### 使用数组初始化vector对象
+```c++
+int int_arr[] = {0, 1, 2, 3, 4, 5};
+vector<int> ivec(begin(int_arr), end(int_arr));
+```
+
