@@ -201,7 +201,7 @@ iter1 - iter2 //距离
 auto mid = text.begin() + (end - beg)/2;
 ```
 
-# 3.5 数值
+# 3.5 数组
 ## 3.5.1 定义和初始化内置数组
 ```c++
 unsigned cnt = 42; //不是常量表达式
@@ -297,3 +297,61 @@ int int_arr[] = {0, 1, 2, 3, 4, 5};
 vector<int> ivec(begin(int_arr), end(int_arr));
 ```
 
+# 3.6 多维数组
+### 多维数组的初始化
+```c++
+int ia[3][4] = {
+    {0, 1, 2, 3},
+    {4, 5, 6, 7},
+    {8, 9, 10, 11}
+};
+
+int ia[3][4] = {0,1,2,3,4,5,6,7,8,9,10,11}; //==above
+
+int ia[3][4] = {{0},{4},{8}}; //初始化每行首元素
+
+int ix[3][4] = {0,3,6,9}; //初始化第一行
+```
+
+### 多维数组的下标引用
+```c++
+int (&row)[4] = ia[1]; //把row绑定到ia的第二个4元素数组上
+```
+### 范围for
+```c++
+size_t cnt = 0;
+for (auto &row : ia)
+    for (auto &col : row){
+        col = cnt;
+        ++cnt;
+    }
+```
+外层必须声明为引用，否则会当成指针出错。内层不需要写操作时可以不用。
+
+### 指针和多维数组
+```c++
+int *ip[4];  //int指针数组
+int (*ip)[4]; //指向含有4个整数的数组
+```
+```c++
+int ia[3][4] = {};
+for (auto p = ia; p != ia + 3; ++p) {
+    for (auto q = *p; q != *p + 4; ++q) //指针p指向一个含有四个整数的数组，解引用之后才是该数组
+        cout << *q << ' ';
+    cout << endl;
+}
+// ==
+for (auto p = begin(ia); p != end(ia); ++p) {
+    for (auto q = begin(*p); q != end(*p); ++q)
+    ...
+}
+```
+### 类型别名简化
+```c++
+using int_array = int[4];
+typedef int int_array[4]; //or
+
+for (int_array *p = ia; p != ia + 3; ++p){
+    for (int *q = *p; q != *p + 4; ++q)
+        cout << *q << ' ';
+}
