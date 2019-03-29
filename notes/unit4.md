@@ -132,3 +132,52 @@ cout << ((grade < 60) ? "fail" : "pass");
 
 # 4.9 sizeof运算符
 所得值为size_t类型
+
+# 4.10 逗号运算符
+
+# 4.11 类型转换
+### 发生隐式类型转换
+* 大多数表达式中，比int小的整型值首先提升为较大的整型类型
+* 在条件中，非布尔值转换成布尔类型
+* 初始化中，初始值转换成变量的类型；赋值中，右侧对象转换成左侧的类型
+
+## 4.11.1 算术转换
+### 整型提升
+提升为int
+
+### 无符号类型的运算对象
+
+### 理解算术转换
+
+## 4.11.2 其他隐式类型转换
+### 数组转换成指针
+decltype, &, sizeof, typeid时，转换不会发生
+
+### 指针的转换
+### 转换成布尔类型
+### 转换成常量
+### 类类型定义的转换
+
+## 4.11.3 显式转换
+### static_cast
+```c++
+int i, j;
+double slope = static_cast<double>(j) / i;
+```
+### const_cast
+```c++
+const char *pc;
+char *p = const_cast<char*>(pc);
+```
+改变运算对象的底层const
+
+### reinterpret_cast
+```c++
+int *ip;
+char *pc = reinterpret_cast<char*>(ip);
+```
+
+### 旧式强制类型转换
+
+# 4.12 运算符优先级表
+p166
