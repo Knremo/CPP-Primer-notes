@@ -83,3 +83,54 @@ string::size_type find_char(const string &s, char c,
 否则只能作用于string对象，字面值就不行
 
 ## 6.2.4 数组形参
+```c++
+void print(const int*);
+void print(const int[]);
+void print(const int[10]);
+```
+### 使用标记指定数组长度
+C风格字符串空字符
+```c++
+void print(const char *cp)
+{
+    if (cp)    //不是空指针
+        while (*cp) //不是空字符
+            cout << *cp++;
+}
+```
+### 使用标准库规范
+```c++
+void print(const int *beg, const int *end)
+{
+    while (beg != end)
+        cout << *beg++ << endl;
+}
+```
+
+`print(begin(j), end(j));`
+
+### 显式传递一个表示数组大小的形参
+```c++
+void print(const int ia[], size_t size)
+{
+    ...
+}
+
+print(j, end(j) - begin(j));
+```
+### 数组引用参数
+```c++
+void print(int (&arr)[10])
+{
+    for (auto elem : arr)
+        cout << elem << endl;
+}
+```
+### 传递多维数组
+```c++
+void print(int (*matrix)[10], int rowSize) {}
+
+void print(int matrix[][10], int rowSize) {}
+```
+## 6.2.5 main:处理命令行选项
+
