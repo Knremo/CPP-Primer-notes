@@ -133,4 +133,7 @@ void print(int (*matrix)[10], int rowSize) {}
 void print(int matrix[][10], int rowSize) {}
 ```
 ## 6.2.5 main:处理命令行选项
+```c++
+int main(int argc, char *argv[]) {}
+```
 
