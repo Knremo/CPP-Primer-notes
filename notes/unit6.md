@@ -146,4 +146,45 @@ int main(int argc, char **argv) {}
 argv[0]是程序的名字
 
 ## 6.2.6 含有可变形参的函数
+### initializer_list形参
+类型相同
+
+initializer_list头文件
+```c++
+initializer_list<T> lst; //默认初始化
+initializer_list<T> lst{a,b,c...}; //lst的元素是对应初始值的副本，const
+lst2(lst)
+lst2 = lst //拷贝或赋值之后共享元素
+lst.size() //元素数量
+lst.begin() 
+lst.end()
+```
+
+可变数量的实参：
+```c++
+void error_msg(initializer_list<string> il)
+{
+    for (auto beg - il.begin(); beg != il.end(); ++beg)
+        cout << *beg << " ";
+    cout << endl;
+}
+
+error_msg({"a", "dwdwdw", "ggggg"});
+```
+还可以使用范围for
+```c++
+for (auto &elem : il)
+    ...
+```
+
+### 省略符形参
+使用varargs的C标准库
+
+```c++
+void foo(parm_list, ...);
+void foo(...);
+```
+
+# 6.3 返回类型和return语句
+
 
