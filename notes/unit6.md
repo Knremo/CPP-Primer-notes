@@ -132,8 +132,18 @@ void print(int (*matrix)[10], int rowSize) {}
 
 void print(int matrix[][10], int rowSize) {}
 ```
+
 ## 6.2.5 main:处理命令行选项
 ```c++
 int main(int argc, char *argv[]) {}
 ```
+argv是一个数组，它的元素指向C风格字符串的指针；argc表示数组中字符串额数量
+
+也可以定义为
+```c++
+int main(int argc, char **argv) {}
+```
+argv[0]是程序的名字
+
+## 6.2.6 含有可变形参的函数
 
