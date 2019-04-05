@@ -190,5 +190,80 @@ void foo(...);
 void函数 return
 
 ## 6.3.2 有返回值函数
+### 值是如何被返回的
 
+### 不要返回局部对象的引用或指针
 
+### 引用返回左值
+
+### 列表初始化返回值
+```c++
+return {"a", "b", "c"};
+```
+### 主函数main的返回值
+cstdlib头文件
+```c++
+return EXIT_FAILURE;
+//
+return EXIT_SUCCESS;
+```
+### 递归
+
+## 6.3.3 返回数组指针
+```c++
+typedef int arrT[10];
+//or
+using arrT = int[10];
+
+arrT* func(int i);
+```
+### 不使用别名的声明
+```c++
+int (*func(int i))[10];
+```
+### 使用尾置返回类型
+```c++
+auto func(int i) -> int(*)[10];
+```
+### 使用decltype
+```c++
+int odd[] = {1, 3, 5, 7,9};
+int even[] = {0, 2, 4, 6, 8};
+
+decltype(odd) *arrPtr(int i)
+{
+    return (i % 2) ? &odd : &even;
+}
+```
+
+# 6.4 函数重载
+### 定义重载函数
+形参不同
+
+### 重载和const形参
+一个拥有顶级const的形参无法和没有的区分
+```c++
+Record lookup(Phone);
+Record lookup(const Phone); //wrong
+
+Record lookup(Phone*);
+Record lookup(Phone* const); //wrong
+```
+底层const可以
+```c++
+Record lookup(Phone&);
+Record lookup(const Phone&); 
+
+Record lookup(Phone*);
+Record lookup(const Phone*); 
+```
+
+### const_cast
+
+## 6.4.1 重载与作用域
+内层同名会覆盖外层声明
+
+内层没有就会暴露外面所有的
+
+# 6.5 特殊用途语言特性
+## 6.5.1 默认实参
