@@ -267,3 +267,62 @@ Record lookup(const Phone*);
 
 # 6.5 特殊用途语言特性
 ## 6.5.1 默认实参
+一旦某个形参被赋予了默认值，它后面的所有形参都必须有默认值
+```c++
+string screen(sz ht = 24, sz wid = 80, char backgrnd = ' ');
+```
+### 使用默认实参调用
+用后面的必须提供前面的
+
+### 默认实参声明
+函数后续声明只能为那些没有默认值的形参添加默认实参，而且该形参右侧的所有形参必须都有默认值
+
+## 6.5.2 内联函数和constexpr函数
+### 内联函数
+```c++
+inline const string &shorterString(const string &s1, const string &s2)
+{
+    return s1.size() <= s2.size() ? s1 : s2;
+}
+```
+### constexpr函数
+函数的返回值类型及所有的形参类型都得是字面值类型，必须有一天return
+
+```c++
+constexpr int new_sz() { return 42;}
+constexpr int foo = new_sz();
+```
+### 把内联函数和constexpr函数放在头文件中
+
+## 6.5.3 调试帮助
+### assert预处理宏
+`assert(expr);`
+
+定义在cassert头文件，直接使用
+### NDEBUG预处理变量
+关闭调试状态
+`#define NDEBUG`
+
+or
+
+`cc -D NDEBUG main.cpp`
+
+```c++
+void print()
+{
+#ifdef NDEBUG
+    cerr << __func__ << endl;
+#endif
+...
+
+}
+```
+```c++
+__func__ //函数的名字
+__FILE__ //文件名
+__LINE__ //当前行号，整型
+__TIME__ //编译时间，字符串
+__DATE__ //编译日期
+```
+
+# 6.6 函数匹配
