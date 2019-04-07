@@ -326,3 +326,65 @@ __DATE__ //编译日期
 ```
 
 # 6.6 函数匹配
+
+# 6.7 函数指针
+```c++
+bool lengthCompare(const string &, const string &);
+bool (*pf)(const string &, const string &);
+```
+### 使用函数指针
+```c++
+pf = lengthCompare;
+//or
+pf = &lengthCompare;
+```
+使用
+```c++
+bool b1 = pf("hello", "goodbye");
+bool b2 = (*pf)("hello", "goodbye");
+bool b3 = lengthCompare("hello", "goodbye");
+```
+### 重载函数的指针
+指针类型与重载函数精确匹配
+
+### 函数指针形参
+```c++
+void useBigger(const string &s1, const string &s2,
+               bool pf(const string &, const string &));
+//or
+void useBigger(const string &s1, const string &s2,
+               bool *(pf)(const string &, const string &));
+```
+调用
+```c++
+useBigger(s1, s2, lengthCompare);
+```
+类型别名
+```c++
+//函数类型
+typedef bool Func(const string &, const string &);
+typedef decltype(lengthCompare) Func2;  //等价
+//指向函数的指针
+typedef bool (*FuncP)(const string &, const string &);
+typedef decltype(lengthCompare) *FuncP2;  //等价
+```
+声明
+```c++
+void useBigger(const string&, const string&, Func);
+void useBigger(const string&, const string&, FuncP2);
+```
+### 返回指向函数的指针
+```c++
+//1
+using F = int(int*, int);
+using PF = int(*)(int*, int);
+
+PF f1(int);
+F *f1(int);
+
+//2
+int (*f1(int))(int*, int);
+
+//3
+auto f1(int) -> int (*)(int*, int);
+```
