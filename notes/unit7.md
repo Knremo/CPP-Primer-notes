@@ -197,3 +197,23 @@ private:
 };
 ```
 ## 7.3.2 返回*this的成员函数
+```c++
+class Screen {
+public:
+    Screen &set(char);
+    Screen &set(pos, pos, char);
+    //同上
+};
+inline Screen &Screen::set(char c)
+{
+    contents[cursor] = c;
+    return *this;
+}
+inline Screen &Screen::set(pos r, pos col, char ch)
+{
+    contents[r*width + col] = ch;
+    return *this;
+}
+```
+返回引用类型，左值，原副本
+### 从const成员函数返回*this
