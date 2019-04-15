@@ -217,3 +217,26 @@ inline Screen &Screen::set(pos r, pos col, char ch)
 ```
 返回引用类型，左值，原副本
 ### 从const成员函数返回*this
+```c++
+class Screen {
+public:
+    Screen &display(std::ostream &os)
+    {
+        do_display(os); return *this;
+    }
+    //返回非常量对象
+    const Screen &display(std::ostream &os) const
+    {
+        do_display(os); return *this;
+    }
+    //返回常量对象
+private:
+    void do_display(std::ostream &os) const {os << contents;}
+};
+```
+调用的对象是否是const决定了调用哪一个
+```c++
+Screen myScreen(5, 3);
+const Screen blank(5, 3);
+```
+## 7.3.3 类类型
