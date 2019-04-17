@@ -240,3 +240,5 @@ Screen myScreen(5, 3);
 const Screen blank(5, 3);
 ```
 ## 7.3.3 类类型
+
+## 7.3.4 友元再探
