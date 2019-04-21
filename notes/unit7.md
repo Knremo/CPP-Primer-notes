@@ -242,3 +242,34 @@ const Screen blank(5, 3);
 ## 7.3.3 类类型
 
 ## 7.3.4 友元再探
+###  类之间的友元关系
+```c++
+class Screen {
+    friend class Window_mgr; 
+    //Window_mgr的成员可以访问Screen的私有部分
+    ...
+};
+
+class Window_mgr {
+public:
+    using ScreenIndex = std::vector<Screen>::size_type;
+    void clear(ScreenIndex);
+private:
+    std::vector<Screen> screens{Screen(24, 80, ' ')};
+};
+
+void Window_mgr::clear(ScreenIndex i)
+{
+    Screen &s = Screen[i];
+    s.contents = string(s.height * s.width, ' ');
+}
+```
+没有传递性
+### 令成员函数作为友元
+```c++
+class Screen {
+    friend void Window_mgr::clear(ScreenIndex);
+};
+### 函数重载和友元
+分别声明
+### 友元声明和作用域
