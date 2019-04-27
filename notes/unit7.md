@@ -275,3 +275,80 @@ class Screen {
 ### 友元声明和作用域
 
 # 7.4 类的作用域
+
+# 7.5 构造函数再探
+## 7.5.1 构造函数初始值列表
+const成员和引用成员必须初始化
+
+构造函数初始值的顺序与成员声明的顺序一致
+
+默认实参和构造函数
+```c++
+class Sales_data {
+public:
+    Sales_data(std::string s=""): bookNo(s) {}
+    //与default相同
+    ...
+};
+
+## 7.5.2 委托构造函数
+使用其他构造函数
+```c++
+class Sales_data {
+public:
+    Sales_data(std::string s, unsigned snt, double price): bookNo(s), units_sold(cnt), revenue(cnt*price) {}
+    //委托给第一个用括号里的三个参数，默认初始化
+    Sales_data(): Sales_data("", 0, 0) {}
+    //委托给第一个用括号里的三个参数
+    Sales_data(std::string s): Sales_data(s, 0, 0) {}
+    //委托给第二个，在间接委托给第一个
+    Sales_data(std::istream &is): Sales_data() { read(is, *this); }
+};
+```
+先执行被委托函数的初始值列表和函数体，在执行委托函数的函数体
+
+## 7.5.3 默认构造函数的作用
+???
+## 7.5.4 隐式的类类型转换
+???
+## 7.5.5 聚合类
+???
+## 7.5.6 字面值常量类
+???
+
+# 7.6 类的静态成员
+声明静态成员
+```c++
+class Account {
+public:
+    void calculate() { amount += amount * interestRate; }
+    static double rate() { return interestRate; }
+    static void rate(double);
+private:
+    std::string owner;
+    double amount;
+    static double interestRate;
+    static double initRate();
+};
+```
+不能声明成const，不能使用this指针
+
+### 使用类的静态成员
+```c++
+double r;
+r = Account::rate();
+
+Account ac1;
+Account *ac2 = &ac1;
+
+r = ac1.rate();
+r = ac2->rate();
+```
+### 定义静态成员
+```c++
+void Account::rate(double newRate)
+{
+    interestRate = newRate;
+}
+double Account::interestRate = initRate();
+```
