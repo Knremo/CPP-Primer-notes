@@ -95,7 +95,9 @@ std::cout << "c1"
 定义在函数体内部的内置类型变量将不被初始化，值是未定义.
 
 ## 2.2.2 变量声明和定义的关系
-`extern int i;` //声明
+`extern int i;` //声明而不定义
+
+在函数体内初始化一个`extern`标记的变量引发错误
 
 ## 2.2.3 标识符
 以字母，下划线开头.自定义标识符不能出现连续两个下划线，也不能以下划线紧连大写字母开头，定义在函数体外的标识符不能以下划线开头。
@@ -136,11 +138,17 @@ int &r2 = *p;   //&是声明的一部分，*是解引用符
 
 ### 空指针
 ```c++
-int *p1 = nullptr;
+int *p1 = nullptr; //c++11,可以转换为任意类型
 int *p2 = 0;
+
+// #include <cstdlib>
+int *p3 = NULL; //==0
 ```
 ### void* 指针
+存放任意类型
+
 ### 指向指针的指针
+
 ### 指向指针的引用
 ```c++
 int *p;
@@ -150,6 +158,8 @@ int *&r = p;
 # 2.4 const 限定符
 `const int bufSize = 512;`
 
+必须初始化，可以用字面值
+
 多个文件共享
 ```c++
 extern const int bufSize = fcn(); //file.cpp
@@ -157,12 +167,14 @@ extern const int bufSize;       //file.h
 ```
 
 ## 2.4.1 const的引用
+对常量的引用
 ```c++
 const int ci = 1024;
 const int &r1 = ci; //right
 r1 = 42; //wrong
 int &r2 = ci; //wrong
 
+//可以用非常量、字面值、表达式初始化
 const int &r = 0; //right
 ```
 
