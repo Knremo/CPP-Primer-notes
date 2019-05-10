@@ -202,6 +202,10 @@ const double *const pip = &pi;
 
 ## 2.4.3 顶层const
 
+顶层const(top-level const):指针本身是个常量
+
+底层const(low-level const):指针所指的对象是一个常量
+
 ## 2.4.4 constexpr和常量表达式
 ### constexpr变量
 
