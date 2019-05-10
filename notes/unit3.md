@@ -8,7 +8,7 @@ using std::string;
 ```
 ## 3.2.1 定义和初始化string对象
 ```c++
-string s1;
+string s1; //默认初始化，空string
 string s2 = s1;
 string s3 = "hiya"; //= string s3("hiya");
 string s4(10, 'c'); // 'c'x10
@@ -35,7 +35,7 @@ size的返回值类型
 ### 比较string对象
 长度不同，字符相同，较短的小
 
-第一个对应的字符中小的较小
+第一个对应不同的字符中小的较小
 
 ### 字面值和string对象相加
 每个+的两侧至少有一是string
@@ -65,7 +65,7 @@ string str("some string");
 for (auto c : str) //c: char
     cout << c << endl;
 ```
-`for(auto &c:str)`
+`for(auto &c : str)`改变值
 
 ### 只处理一部分字符
 下标运算符,string::size_type类型

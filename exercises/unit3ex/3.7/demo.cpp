@@ -9,11 +9,10 @@ int main()
     std::cout << input << std::endl;
     for (char &str : input)
     {
-        // if (isalnum(str))
-        // {
-        //     str = 'X';
-        // }
-        str = 'X';
+        if (isalnum(str))
+        {
+            str = 'X';
+        }
     }
     std::cout << input << std::endl;
     return 0;

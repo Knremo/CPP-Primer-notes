@@ -5,7 +5,7 @@ using std::string;
 
 int main()
 {
-    string input("sdasdsdsdasdwww   sfsfs\v  sdsdsbbb");
+    string input("123456");
     std::cout << input << std::endl;
     /*
     string::size_type index(0);
