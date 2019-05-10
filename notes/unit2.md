@@ -209,6 +209,8 @@ const double *const pip = &pi;
 ## 2.4.4 constexpr和常量表达式
 ### constexpr变量
 
+声明constecpr,由编译器验证
+
 ```c++
 constexpr int mf = 20;
 constexpr int limit = mf + 1;
@@ -232,6 +234,7 @@ constexpr int i = 42;
 constexpr const int *p = &i;
 constexpr int *p1 = &j;
 ```
+
 # 2.5 处理类型
 ## 2.5.1 类型别名
 ### 类型别名
@@ -246,8 +249,9 @@ typedef wages base, *p; //base是double的同义词，p是double*的同义词.
 using SI = Sales_item;
 ```
 ### 指针、常量和类型别名
+使人迷惑
 ```c++
-typedef char *pstring;
+typedef char *pstring; // == char*
 const pstring cstr = 0;  //指向char的常量指针，而非指向常量字符的指针
 const pstring *ps; //指向char的常量指针的指针
 ```
@@ -263,11 +267,11 @@ auto a = r;  //a is int
 ```
 auto一般会忽略顶层const，底层const会保留
 ```c++
-const int ci = i, &cr = ci;
+const int ci = i, &cr = ci;  //top-level const
 auto b = ci; // int b = ci;
 auto c = cr;// c int
 auto d = &i; //int pointer
-auto e = &ci; //const int pointer
+auto e = &ci; //const int pointer, low-level const
 ```
 需要顶层const
 ```c++
@@ -279,6 +283,7 @@ auto &g = ci; //整型常量的引用
 auto &h = 42; //wrong,不能为非常量引用绑定字面值
 const auto &j = 42; //right
 ```
+
 ## 2.5.3 decltype类型指示符
 ```c++
 const int ci = 0, &cj = ci;
@@ -286,6 +291,7 @@ decltype(ci) x = 0; //x: const int
 decltype(cj) y = x; //y: const int&
 decltype(cj) z; //wrong,z是一个引用，必须初始化
 ```
+
 ### decltype和引用
 ```c++
 int i = 42, *p = &i, &r = i;
