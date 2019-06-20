@@ -179,6 +179,7 @@ vector<int>::const_iterator it2;
 如果不是常量，返回`iterator`
 
 `cbegin,cend`返回`const_iterator`类型
+`auto it = v.cbegin();`
 
 ### 箭头运算符
 `it->mem` = `(*it).mem`
@@ -198,11 +199,21 @@ iter1 - iter2 //距离
 ```
 
 ### 迭代器的算术运算
-距离类型`difference_type`
+距离类型`difference_type`,带符号
 
 ### 使用迭代器运算
+二分搜索
 ```c++
-auto mid = text.begin() + (end - beg)/2;
+auto beg = text.begin(), end = text.end();
+auto mid = text.begin() + (end - beg)/2; ////没有定义迭代器相加的规则,所以这里用相减，化简之后和相加的一样
+while (mid != end && *mid != sought)
+{
+    if (sought < *mid)
+        end = mid;
+    else
+        beg = mid + 1;
+    mid = beg + (end - beg)/2;
+}
 ```
 
 # 3.5 数组
