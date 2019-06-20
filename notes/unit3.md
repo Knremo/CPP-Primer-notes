@@ -110,6 +110,10 @@ vector<T> v3(n, val); //n个重复元素
 vector<T> v4(n); //n个重复执行了值初始化的对象
 vector<T> v5{a,b,c...};
 vector<T> v5={a,b,c...};
+
+//类型不匹配
+vector<string> v{10}; //10个默认初始化元素
+vector<string> vv{10, "hi"}; //10个hi
 ```
 拷贝元素类型需相同
 
