@@ -209,7 +209,7 @@ const double *const pip = &pi;
 ## 2.4.4 constexpr和常量表达式
 ### constexpr变量
 
-声明constecpr,由编译器验证
+声明constexpr,由编译器验证
 
 ```c++
 constexpr int mf = 20;
