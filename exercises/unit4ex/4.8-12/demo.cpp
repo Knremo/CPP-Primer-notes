@@ -27,14 +27,25 @@ void f3()
     }
 }
 
-//4.11 
+//4.11
 void f4()
 {
-    
+    int a = 12, b = 11, c = 10, d = 9;
+    if (a > b && b > c && c > d)
+        cout << 1 << endl;
 }
+
+//4.12
+void f5()
+{
+    int i = 1, j = 2, k = 3;
+    if (i != j < k) // j < k 得到0或1
+        cout << 1 << endl;
+}
+
 int main()
 {
-    f3();
+    f5();
 
     return 0;
 }
