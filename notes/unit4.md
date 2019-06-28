@@ -64,6 +64,13 @@
 # 4.4 赋值运算符
 左侧运算对象必须是一个可修改的左值
 
+结果是左侧运算对象，所以
+```c++
+int i;
+if (i = 0) cout << 1 << endl; //不会有0
+if (i = 1) cout << 2 << endl; //只有1
+```
+
 右结合律
 ```c++
 string s1, s2;
@@ -113,7 +120,8 @@ while (pbeg != v.end() && *pbeg >= 0)
 
 ### 嵌套条件运算符
 ```c++
-finalgrade = (grade > 90) ? "high pass" : (grade < 60) ? "fail" : "pass";
+finalgrade = (grade > 90) ? "high pass" 
+                          : (grade < 60) ? "fail" : "pass";
 ```
 ### 在输出表达式中使用条件运算符
 ```c++
@@ -131,10 +139,30 @@ cout << ((grade < 60) ? "fail" : "pass");
 ```
 移位、位求反、位与、位异或、位或运算符会提升为int
 
+bitset
+```c++
+#inculde <bitset>
+
+char x = 'q';
+cout << bitset<32>(x << 6) << endl; //32 == sizeof(int)*8
+```
+
 # 4.9 sizeof运算符
 所得值为size_t类型
+```c++
+sizeof(type)
+sizeof expr
+```
 
 # 4.10 逗号运算符
+真正的结果是右侧表达式的值
+```c++
+vector<int>::size_type cnt = ivec.size();
+
+for(vector<int>::size_type ix = 0;
+                 ix != ivec.size(); ++ix, --cnt)
+    ivec[ix] = cnt;
+```
 
 # 4.11 类型转换
 ### 发生隐式类型转换
