@@ -180,7 +180,7 @@ for(vector<int>::size_type ix = 0;
 
 ## 4.11.2 其他隐式类型转换
 ### 数组转换成指针
-decltype, &, sizeof, typeid时，转换不会发生
+decltype, &, sizeof, typeid时，转换不会发生，
 
 ### 指针的转换
 ### 转换成布尔类型
