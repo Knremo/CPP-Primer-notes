@@ -189,10 +189,18 @@ decltype, &, sizeof, typeid时，转换不会发生，
 
 ## 4.11.3 显式转换
 ### static_cast
+只要不包含底层const
 ```c++
 int i, j;
 double slope = static_cast<double>(j) / i;
 ```
+
+找回void*指针中的值
+```c++
+void* p = &d;
+double *dp = static_cast<double*>(p);
+```
+
 ### const_cast
 ```c++
 const char *pc;
