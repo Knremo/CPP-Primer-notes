@@ -23,14 +23,20 @@ if(...) {
 ```
 ## 5.3.2 switch语句
 ```c++
-switch(cin >> ch) {
-    case 'a':
-        ++aCnt;
-        break;
-    case 'e':
-        ++eCnt;
-        break;
+while (cin >> ch)
+{
+    switch(ch) 
+    {
+        case 'a':
+            ++aCnt;
+            break;
+        case 'e':
+            ++eCnt;
+            break;
+    }
 }
+```
+
 case标签必须是整型常量表达式
 
 ### switch内部控制流
