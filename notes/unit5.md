@@ -62,6 +62,7 @@ switch() {
 ## 5.4.1 while语句
 
 ## 5.4.2 for语句
+init-statement只能有一条声明语句，可以定义多个对象
 
 ## 5.4.3 范围for语句
 ```c++
