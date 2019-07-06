@@ -50,13 +50,16 @@ switch(ch) {
         ++Cnt;
         break;
 }
+```
 
 ### default标签
+```
 switch() {
     ...
     default:
         ...;
 }
+```
 
 # 5.4 迭代语句
 ## 5.4.1 while语句
