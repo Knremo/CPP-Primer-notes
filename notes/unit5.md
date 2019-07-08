@@ -85,6 +85,8 @@ do {
 
 # 5.5 跳转语句
 ## 5.5.1 break语句
+while, do while, for, switch
+
 ## 5.5.2 continue语句
 ## 5.5.3 goto语句
 同一函数内
