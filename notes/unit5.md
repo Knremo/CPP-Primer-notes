@@ -148,3 +148,28 @@ out_of_range //超出有效范围
 
 new 头文件定义了bad_alloc,默认初始化
 type_info 头文件定义bad_cast,默认初始化
+
+what()
+
+```c++
+void f3()
+{
+    int i1, i2;
+    while (cin >> i1 >> i2)
+    {
+        try {
+            if (i2 == 0)
+            throw runtime_error("Divided by zero.");
+            cout << static_cast<double>(i1) / i2 << endl;
+        } catch (runtime_error err) {
+            cout << err.what() << endl 
+                 << "Try Again? Enter Y or N" << endl;
+        
+        char c;
+        cin >> c;
+        if (!cin || c =='n')
+            break;
+        }
+    }
+}
+```
