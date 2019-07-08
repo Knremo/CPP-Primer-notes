@@ -50,6 +50,15 @@ void f2()
         cout << s1 << endl;
 }
 
+//5.22
+void f3()
+{
+    int sz;
+    do {
+        sz = 1;
+    } while (sz <= 0);
+}
+
 int main()
 {
     f2();
