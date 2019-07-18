@@ -147,6 +147,19 @@ int main(int argc, char **argv) {}
 ```
 argv[0]是程序的名字
 
+argv最后一个指针之后的元素保证为0
+```c++
+$ mypro -d hhh -c fff
+
+argc = 5;
+argv[0] = "mypro";
+argv[1] = "-d";
+argv[2] = "hhh";
+argv[3] = "-c";
+argv[4] = "fff";
+argv[5] = 0;
+```
+
 ## 6.2.6 含有可变形参的函数
 ### initializer_list形参
 类型相同
