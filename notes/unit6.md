@@ -206,10 +206,17 @@ void函数 return
 
 ## 6.3.2 有返回值函数
 ### 值是如何被返回的
+返回引用
+```c++
+const string &shorterString(const string &s1, const string &s2)
+{
+    return s1.size() <= s2.size() ? s1 : s2;
+}
 
 ### 不要返回局部对象的引用或指针
 
 ### 引用返回左值
+
 
 ### 列表初始化返回值
 ```c++
