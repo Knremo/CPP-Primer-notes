@@ -179,7 +179,7 @@ lst.end()
 ```c++
 void error_msg(initializer_list<string> il)
 {
-    for (auto beg - il.begin(); beg != il.end(); ++beg)
+    for (auto beg = il.begin(); beg != il.end(); ++beg)
         cout << *beg << " ";
     cout << endl;
 }
@@ -206,22 +206,54 @@ void函数 return
 
 ## 6.3.2 有返回值函数
 ### 值是如何被返回的
-返回引用
+返回值的方式和初始化一个变量或形参的方式完全一致
+
+
+如果返回引用，仅是一个别名
 ```c++
 const string &shorterString(const string &s1, const string &s2)
 {
     return s1.size() <= s2.size() ? s1 : s2;
 }
+```
 
 ### 不要返回局部对象的引用或指针
+```c++
+const string &manip()
+{
+    string ret;
+
+    if (!ret.empty())
+        return ret; //xxxxx
+    else
+        return "Empty"; //xxxxx
+}
+```
 
 ### 引用返回左值
+返回非常量引用
+```c++
+char &get_val(string &str, string::size_type ix)
+{
+    return str[ix];
+}
 
+int main()
+{
+    string s("a value");
+    cout << s << endl;
+    get_val(s, 0) = 'A';
+    cout << s << endl;
+
+    return 0;
+}
+```
 
 ### 列表初始化返回值
 ```c++
 return {"a", "b", "c"};
 ```
+
 ### 主函数main的返回值
 cstdlib头文件
 ```c++
@@ -229,7 +261,9 @@ return EXIT_FAILURE;
 //
 return EXIT_SUCCESS;
 ```
+
 ### 递归
+recursion function
 
 ## 6.3.3 返回数组指针
 ```c++
