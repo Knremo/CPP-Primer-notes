@@ -315,6 +315,16 @@ Record lookup(const Phone*);
 ```
 
 ### const_cast
+```c++
+const string &shorterString(const string &s1, const string &s2);
+
+string &shorterString(string &s1, string &s2)
+{
+    auto &r = shorterString(const_cast<const string&>(s1),
+                            const_cast<const string&>(s2));
+    return const_cast<string&>(r);
+}
+```
 
 ## 6.4.1 重载与作用域
 内层同名会覆盖外层声明
