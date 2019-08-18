@@ -352,8 +352,9 @@ inline const string &shorterString(const string &s1, const string &s2)
 }
 ```
 ### constexpr函数
-函数的返回值类型及所有的形参类型都得是字面值类型，必须有一天return
+函数的返回值类型及所有的形参类型都得是字面值类型，必须有且只有一条return
 
+里面不能有statement
 ```c++
 constexpr int new_sz() { return 42;}
 constexpr int foo = new_sz();
