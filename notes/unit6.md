@@ -396,6 +396,7 @@ __DATE__ //编译日期
 每个实参的匹配都不劣于其他可行函数需要的匹配；
 
 至少有一个实参的匹配优于其他可行函数提供的匹配。
+#6.6.1 实参类型转换
 
 # 6.7 函数指针
 ```c++
@@ -457,4 +458,12 @@ int (*f1(int))(int*, int);
 
 //3
 auto f1(int) -> int (*)(int*, int);
+```
+
+### 将auto和decltype用于函数指针类型
+```c++
+string::size_type sumLength(const string&, const string&);
+string::size_type largerLength(const string&, const string&);
+//
+decltype(sumLength) *getFcn(const string &);
 ```
