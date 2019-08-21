@@ -6,7 +6,7 @@ struct Sales_data {
     std::string isbn() const { return bookNo; }
 
     //this额外隐形参数，this指针默认是指向非常量对象的常量指针
-    //cosnt，isbn()不会改变对象，所以把this声明成指向常量对象的常量指针，则不能写入
+    //const改变this指针的类型，isbn()不会改变对象，所以把this声明成指向常量对象的常量指针，则不能写入
     //使用const的成员函数被称为常量成员函数
 
     Sales_data& combine(const Sales_data&);
