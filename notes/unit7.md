@@ -112,7 +112,7 @@ Sales_data::Sales_data(std::istream &is)
 # 7.2 访问控制与封装
 ```c++
 class Sales_data {
-public:
+public://整个程序内可以被访问
     Sales_data() = default;
     Sales_data(const std::string &s): bookNo(s) {}
     Sales_data(const std::string &s, unsigned n, double p):
@@ -121,7 +121,7 @@ public:
     
     std::string isbn() const { return bookNo; }
     Sales_data& combine(const Sales_data&);
-private:
+private://可以被类的成员函数访问
     double avg_price() const;
     std::string bookNo;
     unsigned units_sold = 0;
@@ -129,6 +129,7 @@ private:
 };
 ```
 `class`和`struct`的默认访问权限不同
+
 ## 7.2.1 友元
 ```c++
 class Sales_data {
