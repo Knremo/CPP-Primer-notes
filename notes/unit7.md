@@ -150,10 +150,10 @@ private:
 class Screen {
 public:
     typedef std::string::size_type pos;
-    //using pos = std::string::size_type;
+    //using pos = std::string::size_type; 
 
     Screen() = default;
-    Screen(pos ht, pos wd, char c): height(ht), width(wd),contents(ht * wd, c) {}
+    Screen(pos ht, pos wd, char c): height(ht), width(wd), contents(ht * wd, c) {}
 
     //重载
     char get() const {return contents[cursor];}
@@ -190,6 +190,8 @@ void Screen::some_member() const
 {
     ++access_ctr;
 }
+```
+
 ### 类数据成员的初始值
 ```c++
 class Window_mgr {
