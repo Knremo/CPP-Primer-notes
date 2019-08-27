@@ -243,6 +243,11 @@ Screen myScreen(5, 3);
 const Screen blank(5, 3);
 ```
 ## 7.3.3 类类型
+### 类的声明
+前向声明
+```c++
+class Screen;
+```
 
 ## 7.3.4 友元再探
 ###  类之间的友元关系
@@ -263,7 +268,7 @@ private:
 
 void Window_mgr::clear(ScreenIndex i)
 {
-    Screen &s = Screen[i];
+    Screen &s = screens[i];
     s.contents = string(s.height * s.width, ' ');
 }
 ```
@@ -273,11 +278,40 @@ void Window_mgr::clear(ScreenIndex i)
 class Screen {
     friend void Window_mgr::clear(ScreenIndex);
 };
+```
+必须先定义Window_mgr,声明clear,定义Screen,clear的友元声明,定义clear.
 ### 函数重载和友元
 分别声明
 ### 友元声明和作用域
+```c++
+class X
+{
+    friend void f() { /* 友元函数可以定义在类的内部 */}
+    X() {f();}
+    void g();
+    void h();
+};
+void X::g() {return f();} //xxxxxx
+void f();
+void X::h() {return f();} //OK
+```
 
 # 7.4 类的作用域
+返回类型
+```c++
+class Window_mgr
+{
+public:
+    ScreenIndex addScreen(const Screen&);
+    //···
+};
+
+Window_mgr::ScreenIndex Window_mgr::addScreen(const Screen &s)
+{
+    screens.push_back(s);
+    return screens.size() - 1;
+}
+```
 
 # 7.5 构造函数再探
 ## 7.5.1 构造函数初始值列表
