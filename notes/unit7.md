@@ -312,6 +312,8 @@ Window_mgr::ScreenIndex Window_mgr::addScreen(const Screen &s)
     return screens.size() - 1;
 }
 ```
+## 7.4.1 名字查找与类的作用域
+编译器处理完类中的全部声明后才会处理成员函数的定义.
 
 # 7.5 构造函数再探
 ## 7.5.1 构造函数初始值列表
@@ -327,6 +329,7 @@ public:
     //与default相同
     ...
 };
+```
 
 ## 7.5.2 委托构造函数
 使用其他构造函数
