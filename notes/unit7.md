@@ -348,13 +348,76 @@ public:
 先执行被委托函数的初始值列表和函数体，在执行委托函数的函数体
 
 ## 7.5.3 默认构造函数的作用
-???
+声明默认构造函数初始化的对象
+```c++
+Sales_data obj;
+```
+
 ## 7.5.4 隐式的类类型转换
-???
+```c++
+string null_book = "9-999-99999-9";
+//构造一个临时的Sales_data对象
+//该对象的units_sold和revenue等于0，bookNo等于null_book
+item.combine(null_book);
+```
+只允许一步转换
+
+```c++
+item.combine(cin);
+```
+### 抑制构造函数定义的隐式转换
+```c++
+class Sales_data {
+public:
+    Sales_data() = default;
+    Sales_data(const std::string &s, unsigned n, double p):
+               bookNo(s), units_sold(n), revenue(p*n) {}
+    explicit Sales_data(const std::string &s): bookNo(s) {}
+    explicit Sales_data(std::iosteam&);
+}
+```
+只对一个实参的构造函数有效
+
+显式转换
+```c++
+item.combine(static_cast<Sales_data>(cin));
+```
+
 ## 7.5.5 聚合类
-???
+只有public成员，没有任何构造函数，没有类内初始值，没有基类、virtual函数
+
+```c++
+struct Data
+{
+    int ival;
+    string s;
+};
+
+Data val1 = {0, "Anna};
+```
+
 ## 7.5.6 字面值常量类
-???
+数据成员都是字面值类型
+
+至少含有一个constexpr构造函数...
+
+```c++
+class Debug
+{
+public:
+    constexpr Debug(bool b = true): hw(b), io(b), other(b) {}
+    constexpr Debug(bool h, bool i, bool o):
+                    hw(h), io(i), other(o) {}
+    constexpr bool any() { return hw || io || other}
+    void set_io(bool b) { io = b; }
+    void set_hw(bool b) { hw = b; }
+    void set_other(bool b) { other = b; }
+private:
+    bool hw;
+    bool io;
+    bool other;
+};
+```
 
 # 7.6 类的静态成员
 声明静态成员
@@ -386,9 +449,15 @@ r = ac2->rate();
 ```
 ### 定义静态成员
 ```c++
+//外部定义
 void Account::rate(double newRate)
 {
     interestRate = newRate;
 }
+//
 double Account::interestRate = initRate();
+```
+### 静态成员的初始化
+```c++
+static constexpr int period = 30;
 ```
