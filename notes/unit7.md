@@ -448,6 +448,9 @@ r = ac1.rate();
 r = ac2->rate();
 ```
 ### 定义静态成员
+
+凑个更新
+
 ```c++
 //外部定义
 void Account::rate(double newRate)
