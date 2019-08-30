@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <vector>
 
 class Account
 {
@@ -23,10 +24,11 @@ void Account::rate(double newRate)
 
 double Account::interestRate = initRate();
 
+
 int main()
 {
     Account a,b;
-    std::cout << a.interestRate << std::endl;
+    std::cout << a.rate() << std::endl;
     Account::rate(2.3);
     std::cout << a.rate() << std::endl;
 }

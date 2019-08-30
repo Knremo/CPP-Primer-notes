@@ -457,7 +457,8 @@ void Account::rate(double newRate)
 //
 double Account::interestRate = initRate();
 ```
-### 静态成员的初始化
+### 静态成员的类内初始化
+通常情况下类的静态成员不应该再类的内部初始化，但可以为constexpr静态成员提供const整数类型的类内初始值
 ```c++
 static constexpr int period = 30;
 ```
