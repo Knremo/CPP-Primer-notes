@@ -307,8 +307,12 @@ strcpy(p1, p2); //p2拷贝给p1，返回p1
 
 ## 3.5.5 与旧代码的接口
 ### 混用string对象与C风格字符串
+任何出现字符串字面值的地方都可以用以空字符结束的字符数组来代替
+
 ```c++
 string s("Hello world");
+
+//无法用string直接初始化字符数组
 const char *str = s.c_str();
 ```
 
