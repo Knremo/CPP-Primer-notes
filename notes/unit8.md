@@ -109,6 +109,36 @@ out.open(ifile + ".copy");
 if(out)
     ···
 ```
+## 8.2.2 文件模式
+```c++
+in //read
+out //wirte
+app //每次写操作前均定位到文件末尾
+ate //打开文件后立即定位到文件末尾
+trunc //截断文件
+binary //以二进制方式IO
+```
+ofstream,fstream只可以out
 
+ifstream,fstream只可以in
+
+只有当out被设定时才可以trunc
+
+只要trunc没设定，就可以设定app，app默认out
+
+默认情况下，out模式打开的会被截断即使没有trunc；为了保留需同时app；或同时in
+
+### 以out打开文件会丢弃已有数据
+```c++
+//截断
+ofstream out("file1");
+ofstream out2("file1", ofstream::out);
+ofstream out3("file1", ofstream::out | ofstream::trunc);
+//保留
+ofstream app("file2", ofstream::app); //隐含out
+ofstream app2("file2", ofstream::out | ofstream::app);
+```
+
+# 8.3 string流
 
 
