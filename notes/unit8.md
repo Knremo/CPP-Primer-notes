@@ -140,5 +140,51 @@ ofstream app2("file2", ofstream::out | ofstream::app);
 ```
 
 # 8.3 string流
+```c++
+sstream strm;
+sstream strm(s);
 
+strm.str() //返回strm所保存的string的拷贝
+strm.str(s) //将string s拷贝到strm中，返回void
+```
 
+## 8.3.1 使用istringstream
+```c++
+struct PersonInfo
+{
+    string name;
+    vector<string> phones;
+};
+
+string line, word;
+vector<PersonInfo> people;
+
+while (getline(cin, line))
+{
+    PersonInfo info;
+    istringstream record(line); //record定义在内,每一次重新定义流不需要清除eof标志位
+    record >> info.name;
+    while (record >> word)
+        info.phones.push_back(word);
+    people.push_back(info);
+}
+```
+record定义在外
+```c++
+string line, word;
+vector<PersonInfo> people;
+istringstream record; //record定义在内
+while (getline(cin, line))
+{
+    record.str(line);
+    PersonInfo info;
+
+    record >> info.name;
+    while (record >> word)
+        info.phones.push_back(word);
+    people.push_back(info);
+    record.clear(); //清除eof标志位
+}
+```
+
+## 8.3.2 使用ostringstream
