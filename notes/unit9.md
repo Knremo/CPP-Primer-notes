@@ -56,3 +56,25 @@ c.rbegin(), c.rend()
 c.crbegin(), c.crend()
 ```
 ## 9.2.1 迭代器
+左闭合区间
+
+迭代器算术运算只能用于string, vector,deque,array
+
+## 9.2.2 容器类型成员
+反向迭代器
+
+类型别名
+```c++
+list<string>::iterator iter;
+vector<int>::difference_type count;
+```
+
+## 9.2.3 begin和end成员
+```c++
+list<string> a = {"Milton", "Shakespeare", "Austen"};
+auto it1 = a.begin();
+auto it2 = a.rbegin();
+...
+```
+
+## 9.2.4 容器定义和初始化
