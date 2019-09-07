@@ -1,4 +1,7 @@
 #include <vector>
+#include <list>
+#include <iostream>
+
 using namespace std;
 
 //9.11
@@ -18,3 +21,15 @@ void f1()
 //9/12
 
 //9.13
+int main()
+{
+    list<int> lst = {1,2,3,4,5};
+    vector<double> vd(lst.begin(), lst.end());
+
+    vector<int> iv = {1,2,3,4,5};
+    vector<double> vd2(iv.begin(), iv.end());
+    
+    cout << vd2[1];
+
+    return 0;
+}
