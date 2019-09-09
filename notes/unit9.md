@@ -89,4 +89,45 @@ array<int, 42>
 ## 9.2.5 赋值和swap
 ```c++
 c1 = c2 //拷贝
+
+c = {a, b, c...} //array不适用
+swap(c1, c2) //交换c1,c2
+c1.swap(c2)
+
+//不适用关联容器和array
+seq.assign(b, e)  //用迭代器be替换seq中的元素
+
+seq.assign(il)  //初始化列表il
+seq.assign(n, t) //n*t
 ```
+赋值会导致左边内部的迭代器，引用，指针失效，swap不会
+
+array允许赋值
+```c++
+array<int, 10> a1 = {0,1,2,3,4,5,6,7,8,9};
+array<int, 10> a2 = {0};
+a1 = a2; //ok
+a2 = {0};   //xxxxx
+```
+### 使用assign
+```c++
+list<string> names;
+vector<const char*> oldstyle;
+names = oldstyle;  //xxxxx
+
+names.assign(oldstyle.cbegin(), oldstyle.cend());
+```
+### 使用swap
+交换相同类型容器的内容
+
+## 9.2.6 容器大小操作
+size
+
+empty
+
+max_size
+
+## 9.2.7 关系运算符
+每个容器类型都支持相等运算符(==和!=);除了无序关联容器外的所有容器都支持关系运算符(>,>=,<,<=)
+
+# 9.3 顺序容器操作
