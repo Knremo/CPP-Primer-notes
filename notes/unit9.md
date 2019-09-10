@@ -131,3 +131,28 @@ max_size
 每个容器类型都支持相等运算符(==和!=);除了无序关联容器外的所有容器都支持关系运算符(>,>=,<,<=)
 
 # 9.3 顺序容器操作
+## 9.3.1 向顺序容器添加元素
+```c++
+//not array
+c.push_back(t)
+c.emplace_back(args)
+
+c.push_front(t)  //头部创建元素
+c.emplace_front(args)
+
+c.insert(p, t) //在迭代器p之前创建，返回新创建元素的迭代器
+c.emplace(p, args)
+
+c.insert(p, n, t) //迭代器p之前插入n个t
+
+c.insert(p, b, e) //将be之间的元素插入
+
+c.insert(p, il) //将花括号il中的元素插入
+```
+forward_list 有自己专用版本的insert和emplace
+
+forward_list 不支持push_back和emplace_back
+
+vector string 不支持push_front emplace_front
+
+向一个vector，string，deque插入元素会使指针迭代器引用失效
