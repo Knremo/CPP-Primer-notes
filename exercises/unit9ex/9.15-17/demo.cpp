@@ -1,4 +1,7 @@
-#include "../import.h"
+#include <iostream>
+#include <vector>
+#include <list>
+
 using namespace std;
 
 //9.15

@@ -156,3 +156,21 @@ forward_list 不支持push_back和emplace_back
 vector string 不支持push_front emplace_front
 
 向一个vector，string，deque插入元素会使指针迭代器引用失效
+
+### 使用push_back
+
+### 使用push_front
+list,forward_list,deque
+
+### 使用insert的返回值
+反复插入元素
+
+### emplace操作
+构造元素
+```c++
+c.emplace_back("0909-0989876", 25, 15.99);
+
+c.push_back(Sales_data("0909-0989876", 25, 15.99));
+```
+
+## 9.3.2 访问元素
