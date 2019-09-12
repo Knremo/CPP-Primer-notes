@@ -174,3 +174,17 @@ c.push_back(Sales_data("0909-0989876", 25, 15.99));
 ```
 
 ## 9.3.2 访问元素
+```c++
+//at and [] 只适用于string vector deque array
+//back 不适用 forward_list
+c.back()
+c.front()
+c[n]
+c.at[n] //如果越界抛出out_of_range异常
+```
+## 访问成员函数返回的是引用
+```c++
+auto &v = c.back();
+v = 1024;
+```
+## 9.3.3 删除元素
