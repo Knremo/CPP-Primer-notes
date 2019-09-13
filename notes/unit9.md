@@ -188,3 +188,14 @@ auto &v = c.back();
 v = 1024;
 ```
 ## 9.3.3 删除元素
+```c++
+//forward_list 有特殊版本的erase
+//forward_list不支持pop_back
+//vector不支持pop_front
+c.pop_back()
+c.pop_front()
+c.erase(p) //返回被删元素之后的元素的迭代器
+c.erase(b, e)
+c.clear() //删除所有元素
+```
+
