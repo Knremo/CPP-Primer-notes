@@ -198,5 +198,15 @@ c.erase(p) //返回被删元素之后的元素的迭代器
 c.erase(b, e)
 c.clear() //删除所有元素
 ```
-凑更新
-
+删除奇数
+```c++
+list<int> lst = {0,1,2,3,4,5};
+auto it = lst.begin();
+while (it != lst.end())
+    if (*it % 2)
+        it = lst.erase(it);
+    else
+        ++it;
+```
+ ## 9.3.4 特殊的forward_list操作
+ 
