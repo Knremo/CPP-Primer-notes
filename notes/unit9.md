@@ -209,4 +209,18 @@ while (it != lst.end())
         ++it;
 ```
  ## 9.3.4 特殊的forward_list操作
- 
+ 单向链表
+ ```c++
+lst.before_begin()
+lst.cbefore_begin()
+
+lst.insert_after(p, t) //再p之后插入t，n是数量，be是迭代器范围，il是花括号列表
+lst.insert_after(p, n, t)
+lst.insert_after(p, b, e)
+lst.insert_after(p, il)
+
+emplace_after(p, args) //构造一个元素
+
+lst.erase_after(p)
+lst.erase_after(b, e)
+```
