@@ -35,6 +35,7 @@ void ins2list(forward_list<string> &sil, const string &s1, const string &s2)
 {
     unsigned flag = 0;
     auto it = sil.begin();
+    auto bit = sil.before_begin();
 
     while (it != sil.end())
     {
@@ -43,11 +44,13 @@ void ins2list(forward_list<string> &sil, const string &s1, const string &s2)
             sil.insert_after(it, s2);
             ++flag;
         }
+        ++it;
+        ++bit;
     }
 
     if (!flag)
     {
-        sil.push_front(s2);
+        sil.insert_after(bit, s2);
     }
 
     for (auto e:sil)
@@ -56,10 +59,9 @@ void ins2list(forward_list<string> &sil, const string &s1, const string &s2)
 
 int main()
 {
-    forward_list<string> sil = {"a", "b", "b", "x"};
+    forward_list<string> sil = {"a", "b","a", "b", "x"};
 
     ins2list(sil, "a", "hh");
-    cout << sil.front() << endl;
 
     return 0;
 }

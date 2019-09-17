@@ -224,3 +224,12 @@ emplace_after(p, args) //构造一个元素
 lst.erase_after(p)
 lst.erase_after(b, e)
 ```
+## 9.3.5 改变容器大小
+array不支持
+```c++
+c.resize(n) 
+c.resize(n, t) //新元素初始化为t
+```
+
+## 9.3.6 迭代器失效
+
