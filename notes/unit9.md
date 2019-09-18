@@ -232,4 +232,37 @@ c.resize(n, t) //新元素初始化为t
 ```
 
 ## 9.3.6 迭代器失效
+```c++
+list<int> vi = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+auto iter = vi.begin();
+while (iter != vi.end())
+{
+    if (*iter % 2)
+    {
+        iter++;
+        iter = vi.insert(iter, 12); //在iter之前插入
+        iter++;
+    }
+    else
+        iter = vi.erase(iter);
+}
+```
 
+```c++
+while (begin != vi.end())
+    {
+        if (*begin % 2)
+            begin = vi.insert(begin, *begin++);  
+        ++begin;
+    }
+```
+# 9.4 vector对象是如何增长的
+```c++
+//shrink_to_fit 只适用 vector, string, deque
+//capacity和reserve只适用vector,string
+c.shrink_to_fit()
+c.capacity()
+c.reserve(n)
+```
+
+# 9.5 额外的string操作
