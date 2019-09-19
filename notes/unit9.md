@@ -266,3 +266,10 @@ c.reserve(n)
 ```
 
 # 9.5 额外的string操作
+```c++
+string s(cp, n)
+
+string s(s2, pos2)
+
+string s(s2, pos2, len2)
+```
