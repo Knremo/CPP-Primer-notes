@@ -267,9 +267,13 @@ c.reserve(n)
 
 # 9.5 额外的string操作
 ```c++
-string s(cp, n)
+string s(cp, n) //cp指向的数组中前n个字符的拷贝
 
-string s(s2, pos2)
+string s(s2, pos2) //是s2从下标pos2开始的字符的拷贝
 
-string s(s2, pos2, len2)
+string s(s2, pos2, len2) //pos2开始的len2个字符
+
+s.substr(pos, n) //返回一个string，s中从pos开始的n个字符
+s.substr() //所有字符
 ```
+## 9.5.2 改变string的其他办法
