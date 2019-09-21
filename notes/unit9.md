@@ -277,3 +277,19 @@ s.substr(pos, n) //返回一个string，s中从pos开始的n个字符
 s.substr() //所有字符
 ```
 ## 9.5.2 改变string的其他办法
+```c++
+s.insert(s.size(), 5, '!'); //s的末尾插入5个！
+s.erase(s.size()-5, 5); //删除最后5个字符串
+
+const char *cp = "Sdddd";
+s.assign(cp, 3); //"Sdd"
+s.insert(s.size(), cp + 7) //将cp前7个字符插入
+
+//string s1, s2
+s.insert(0, s2); //在s中位置0之前插入s2的拷贝
+s.insert(0, s2, 0, s2.size()); //在s[0]之前插入s2中的s2[0]开始的s2.size()个字符
+
+s2.append("ssss");
+
+s2.replace(11, 3, "sdasdas") //从位置11开始删除3个字符并插入
+```
