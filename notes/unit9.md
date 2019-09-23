@@ -279,7 +279,7 @@ s.substr() //所有字符
 ## 9.5.2 改变string的其他办法
 ```c++
 s.insert(s.size(), 5, '!'); //s的末尾插入5个！
-s.erase(s.size()-5, 5); //删除最后5个字符串
+s.erase(s.size()-5, 5); //删除最后5个字符串,个数
 
 const char *cp = "Sdddd";
 s.assign(cp, 3); //"Sdd"
@@ -293,4 +293,10 @@ s2.append("ssss");
 
 s2.replace(11, 3, "sdasdas") //从位置11开始删除3个字符并插入
 ```
-update!!!
+！
+！
+！9.43-46
+！
+！
+
+## 9.5.3 string搜索操作
