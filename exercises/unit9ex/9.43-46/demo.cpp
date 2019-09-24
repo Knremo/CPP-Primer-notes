@@ -4,42 +4,49 @@
 using namespace std;
 
 //9.43
+void f2(string &s, const string &oldVal, const string &newVal)
+{
+    auto sit = s.begin();
+    while (sit <= s.end()-oldVal.size())
+    {
+        if (*sit == oldVal.front())
+        {
+            string temp(sit, sit + oldVal.size());
+            if (temp == oldVal)
+            {
+                sit = s.erase(sit, sit + oldVal.size());
+                sit = s.insert(sit, newVal.begin(), newVal.end());
+                sit += newVal.size();
+                continue;
+            }
+        }
+        sit++;
+    }
+}
+
+//9.44
 void f1(string &s, const string &oldVal, const string &newVal)
 {
     size_t i = 0;
-    while (i != s.size())
+    while (i <= s.size() - oldVal.size())
     {
         if (s[i] == oldVal.front())
         {
-            //cout << "1 assert done" << endl;
             string temp(s, i, oldVal.size());
-            //cout << temp << endl;
             if (temp == oldVal)
             {
-                //
-                //cout << "2 assert done" << endl;
-                s.erase(i, oldVal.size());
-                //cout << s << endl;
-                s.insert(i, newVal);
-                //cout << s << endl;
-
+                s.replace(i, oldVal.size(), newVal);
                 i += newVal.size() - 1;
-                //cout << i << endl;
             }
-            else
-                i++;
-
         }
-        if (i == s.size() - oldVal.size())
-            break;
         i++;
     }
 }
 
 int main()
 {
-    string s = "the one the best!";
-    f1(s, "!", ".");
+    string s = "thethe one the best the";
+    f2(s, "the", "aa");
 
     cout << s << endl;
 
