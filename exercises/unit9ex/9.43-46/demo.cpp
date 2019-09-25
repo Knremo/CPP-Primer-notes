@@ -43,6 +43,12 @@ void f1(string &s, const string &oldVal, const string &newVal)
     }
 }
 
+//9.45
+string &addpre(const string &s1, const string &p, const string &b)
+{
+    
+}
+
 int main()
 {
     string s = "thethe one the best the";
