@@ -44,9 +44,21 @@ void f1(string &s, const string &oldVal, const string &newVal)
 }
 
 //9.45
-string &addpre(const string &s1, const string &p, const string &b)
+string addpre(const string &s1, const string &p, const string &b)
 {
-    
+    string sr = s1;
+    sr.insert(0, p);
+    sr.append(b);
+    return sr;
+}
+
+//9.46
+string addpre2(const string &s1, const string &p, const string &b)
+{
+    string sr = s1;
+    sr.insert(0, p);
+    sr.insert(sr.size(), b);
+    return sr;
 }
 
 int main()
@@ -56,5 +68,6 @@ int main()
 
     cout << s << endl;
 
+    cout << addpre2("hahaha", "HH", "gg");
     return 0;
 }
