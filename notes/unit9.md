@@ -300,3 +300,15 @@ s2.replace(11, 3, "sdasdas") //从位置11开始删除3个字符并插入
 ！
 
 ## 9.5.3 string搜索操作
+返回下标`string::size_type`类型，如果搜索失败，返回一个`string::npos`
+```c++
+string name("AnnaBelle");
+auto pos1 = name.find("Anna");
+// 0
+//大小写敏感
+
+//与任何一个字符匹配
+string numbers("0123456789"), name("r2d2");
+auto pos = name.find_first_of(numbers);
+
+```
