@@ -310,5 +310,28 @@ auto pos1 = name.find("Anna");
 //与任何一个字符匹配
 string numbers("0123456789"), name("r2d2");
 auto pos = name.find_first_of(numbers);
+//搜索第一个非数字字符
+string dept("03714p3");
+auto pos = dept.find_first_not_of(numbers);
 
+s.find_last_of(args)
+
+s.find_last_not_of(args)
+//args
+c, pos //从s中位置pos开始查找字符c，默认0
+s2, pos //string
+cp, pos //c风格字符串指针
+cp,pos, n //前n个字符
 ```
+查找所有字符
+```c++
+string::size_type pos = 0;
+while ((pos = name.find_first_of(numbers, pos)) != string::npos)
+{
+    cout << "found number at index: " << pos
+         << "element is " << name[pos] << endl;
+    ++pos;
+}
+```
+逆向搜索
+`rfind`
