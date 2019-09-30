@@ -335,3 +335,4 @@ while ((pos = name.find_first_of(numbers, pos)) != string::npos)
 ```
 逆向搜索
 `rfind`
+## 9.5.4 compare函数

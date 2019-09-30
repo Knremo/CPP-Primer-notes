@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -26,6 +27,23 @@ void findnum2(const string &s)
     }
 }
 
+//9.49
+void printvolcabulary(const string &file)
+{
+    ifstream in(file);
+    string temp;
+    string upchar = "tidfhjklb", downchar = "ypqgj";
+
+    while (in >> temp)
+    {
+        auto pos = temp.find_first_of(upchar+downchar);
+        if(pos == string::npos)
+            cout << temp << endl;
+    }
+
+    in.close();
+}
+
 int main()
 {
     findnum2("s1d34fs4rr84");
@@ -34,6 +52,6 @@ int main()
     string numbers = "0123456789", name = "r2d2";
     cout << numbers.find(name) << endl;
 
-    
+    printvolcabulary("vocabulary.txt");
     return 0;
 }
