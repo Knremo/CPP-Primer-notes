@@ -336,3 +336,14 @@ while ((pos = name.find_first_of(numbers, pos)) != string::npos)
 逆向搜索
 `rfind`
 ## 9.5.4 compare函数
+s.compare(args)
+```c++
+s2 //与s2比较
+pos1, n1, s2 //将s中pos1开始的n1个字符与s2比较
+pos1, n1, s2, pos2, n2 //
+
+cp 
+pos1, n1, cp
+pos1, n1, cp, n2
+```
+## 数值转换
