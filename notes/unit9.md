@@ -346,4 +346,23 @@ cp
 pos1, n1, cp
 pos1, n1, cp, n2
 ```
-## 数值转换
+## 9.5.5 数值转换
+```c++
+to_string(val) //返回val的string表示
+
+stoi(s, p, b)  //返回类型为int,long,unsigned long,...
+stol(s, p, b)  //p为size_t指针，s中第一个非数字字符的下标，默认为0
+stoul(s, p, b) //b表示转换的基数，默认10
+stoll(s, p, b) 
+stoull(s, p, b) 
+
+stof(s, p) //浮点数
+stod(s, p) 
+stold(s, p) 
+```
+```c++
+string s2 = "pi = 3.14";
+d = stod(s2.substr(s2.find_first_of("+-.0123456789")));
+```
+# 9.6 容器适配器
+
