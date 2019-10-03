@@ -365,4 +365,10 @@ string s2 = "pi = 3.14";
 d = stod(s2.substr(s2.find_first_of("+-.0123456789")));
 ```
 # 9.6 容器适配器
+stack: 除array和forward_list
 
+queue: list, deque
+
+priority_queue: vector, deque
+
+## 栈适配器
