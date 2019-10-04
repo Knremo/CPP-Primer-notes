@@ -365,10 +365,48 @@ string s2 = "pi = 3.14";
 d = stod(s2.substr(s2.find_first_of("+-.0123456789")));
 ```
 # 9.6 容器适配器
+所有适配器都支持
+```c++
+size_type
+value_type
+container_type //底层容器类型
+A a;
+A a(c); //创建一个a适配器带有c的拷贝
+==,!=,<,<=,>,>=
+a.empty()
+a.size()
+swap(a,b)
+a.swap(b)
+```
+## 定义适配器
+```c++
+stack<int> stk(deq);
+// stack queue 默认是基于deque
+
+stack<string, vector<string>> str_stk;
+```
 stack: 除array和forward_list
 
-queue: list, deque
+queue: list, deque, vector
 
 priority_queue: vector, deque
 
 ## 栈适配器
+```c++
+s.pop()
+s.push()
+s.emplace()
+s.top()
+```
+## 队列适配器
+queue默认基于deque实现，priority_queue默认基于vector实现
+
+queue先进先出，priority_queue按优先级
+```c++
+q.pop() //返回queue首元素或priority_queue最高优先级元素
+q.front()
+q.back() //只适用于queue
+q.top() //返回最高优先级元素，只适用priority_queue
+q.push(item) //创建
+q.emplace(args)
+```
