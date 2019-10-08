@@ -6,7 +6,7 @@ using namespace std;
 
 int main()
 {
-    string expression = "3 * (5+ ( 56 - 6) )/10";
+    string expression = "3 * (5+ ( 56 - 6) )/(10 - 2)";
     stack<char, string> stk;
 
     for (size_t i = expression.size(); i > 0; --i)
@@ -15,8 +15,8 @@ int main()
     }
     cout << stk.top() << endl;
 
-    while (!stk.empty())
-    {
+    // while (!stk.empty())
+    // {
         
-    }
+    // }
 }
