@@ -59,7 +59,8 @@ int getPriority(string s)
         return 1;
     if (s == "*" || s == "/")
         return 2;
-
+    if (s == "(" || s == ")")
+        return 0;
     return 0;
 }
 
@@ -103,10 +104,12 @@ void claculate(stack<int> &stk, string op)
     }
 }
 
-int calculateExpression(const vector<string> tokens)
+int calculateExpression(const string &s)
 {
     stack<int> optNum;
     stack<string> optSyl;
+
+    vector<string> tokens = parseExpression(s);
 
     for (size_t i = 0; i < tokens.size(); ++i)
     {
@@ -114,7 +117,7 @@ int calculateExpression(const vector<string> tokens)
         {
             optNum.push(stoi(tokens[i]));
         }
-        else if (!optSyl.empty())
+        else if (!optSyl.empty() && tokens[i] != ")" && tokens[i] != "(")
         {
             int tokenPriority = getPriority(tokens[i]);
             if (tokenPriority < getPriority(optSyl.top()))
@@ -139,7 +142,13 @@ int calculateExpression(const vector<string> tokens)
         }
         else if (tokens[i] == ")")
         {
-            
+            while (optSyl.top() != "(")
+            {
+                cout << "Operator " << optSyl.top() << " with numbers ";
+                claculate(optNum, optSyl.top());
+                optSyl.pop();
+            }
+            optSyl.pop();
         }
         else
             optSyl.push(tokens[i]);
@@ -161,7 +170,7 @@ int main()
 {
     string expression = "3 * (5+ ( 56 - 6) )/(10 - 2)";
 
-    cout << calculateExpression(parseExpression("3*10*2*1*5-5*2*4"));
+    cout << calculateExpression(expression);
 
     return 0;
 
