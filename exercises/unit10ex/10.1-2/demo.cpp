@@ -13,3 +13,4 @@ int main()
     list<string> sl = {"abs", "sqrt", "abs"};  
     cout << count(sl.begin(), sl.end(), "abs"); 
 }
+
