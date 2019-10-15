@@ -153,7 +153,18 @@ cout << bitset<32>(x << 6) << endl; //32 == sizeof(int)*8
 sizeof(type)
 sizeof expr
 ```
+```c++
+char* p = "abc";
+char pp[] = "abc";
 
+sizeof(p) // 8, 64位cpu的指针都是八字节
+sizeof(pp) // 4, 返回的是数组的长度，包括末尾的\0
+
+p[3] == pp[3]  // 都可以下标索引
+
+cout << p <<endl;
+cout << pp << endl; // 都没有问题
+```
 # 4.10 逗号运算符
 真正的结果是右侧表达式的值
 ```c++

@@ -36,9 +36,16 @@ int main()
     f3();
 
     const char* p = "abc";
+    const char pp[] = "abc";
     //cout << *(p+3) << endl;
     //cout << p[0] << endl;
-    cout << p << endl;
+
+    cout << sizeof(pp) << endl;
+    cout << p[0] << endl;
+
+    int a1[] = {0,1,2,3,4,5,6,7,8,9};
+    int a2[sizeof(a1) / sizeof(*a1)];
+    cout << sizeof(a1) << " " << sizeof(*a1) << endl;
     
     return 0;
 }
