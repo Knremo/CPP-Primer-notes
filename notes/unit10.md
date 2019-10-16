@@ -31,4 +31,15 @@ fill(vec.begin(), vec.end(), 0);
 fill_n(vec.begin(), vec.size(), 0);
 ```
 ### back_inserter
+```c++
+#include <iterator>
+
+vector<int> vec;
+
+auto it = back_inserter(vec);
+*it = 42;
+
+fill_n(back_inserter(vec), 10, 0);
+```
+### 拷贝算法
 
