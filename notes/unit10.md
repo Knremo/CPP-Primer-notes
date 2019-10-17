@@ -36,10 +36,25 @@ fill_n(vec.begin(), vec.size(), 0);
 
 vector<int> vec;
 
-auto it = back_inserter(vec);
+auto it = back_inserter(vec); //返回一个迭代器
 *it = 42;
 
 fill_n(back_inserter(vec), 10, 0);
 ```
 ### 拷贝算法
+内置数组的拷贝
+```c++
+int a1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+int a2[sizeof(a1)/sizeof(*a1)]; //a2与a1大小相同
+
+auto ret = copy(begin(a1), end(a1), a2); //返回目的位置末尾的迭代器，a2至少要有a1的长度
+```
+
+replace
+```c++
+replace(ilst.begin(), ilst.end(), 0, 42);
+
+//不改变原序列
+replace_copy(ilst.begin(), ilst.end(), back_inserter(ivec), 0, 42);
+```
 
