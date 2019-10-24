@@ -57,4 +57,11 @@ replace(ilst.begin(), ilst.end(), 0, 42);
 //不改变原序列
 replace_copy(ilst.begin(), ilst.end(), back_inserter(ivec), 0, 42);
 ```
+## 10.2.3 重排容器元素的算法
+```c++
+sort(words.begin(), words.end());
+auto end_unique = unique(words.begin(), words.end());
+words.erase(end_unique, words.end());
+```
+# 10.3 定制操作
 
