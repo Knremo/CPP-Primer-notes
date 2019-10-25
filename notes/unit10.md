@@ -64,4 +64,17 @@ auto end_unique = unique(words.begin(), words.end());
 words.erase(end_unique, words.end());
 ```
 # 10.3 定制操作
+## 10.3.1 向算法传递函数
+谓词
+```c++
+bool isShorter(const string &s1, const string &s2)
+{
+    return s1.size() < s2.size();
+}
 
+sort(words.begin(), words.end(), isShorter);
+```
+相同长度按字典排序
+```c++
+stable_sort(words.begin(), words.end(), isShorter);
+```
