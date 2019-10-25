@@ -61,7 +61,6 @@ void f3(vector<string> &s)
         cout << e << endl;
 }
 
-
 int main()
 {
     vector<string> words = {"I", "just", "want", "to", "play", "alone", "ok", "h", "play"};
