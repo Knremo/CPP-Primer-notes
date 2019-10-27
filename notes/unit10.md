@@ -78,3 +78,19 @@ sort(words.begin(), words.end(), isShorter);
 ```c++
 stable_sort(words.begin(), words.end(), isShorter);
 ```
+## 10.3.2 lambda表达式
+```c++
+[capture list](parameter list) -> return type { function body }
+
+auto f = [] { return 42; }
+
+cout << f();
+
+// 传递参数
+stable_sort(words.begin(), words.end(), 
+            [](const string &a, const string &b)
+              { return a.size() < b.size(); });
+
+// 使用捕获列表
+
+```
