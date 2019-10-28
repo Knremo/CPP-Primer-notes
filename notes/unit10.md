@@ -92,5 +92,26 @@ stable_sort(words.begin(), words.end(),
               { return a.size() < b.size(); });
 
 // 使用捕获列表
+[sz](const string &a){ return a.size() >= sz; }
+```
+```c++
+void biggies(vector<string> &words, vector<string>::size_type sz)
+{
+    elimDups(words);
+    stable_sort(words.begin(), words.end(), isShorter);
+    auto wc = find_if(words.begin(), words.end(),
+         [sz](const string &a){ return a.size() >= sz; }); 
+    // find_if第三个参数是一个一元谓词，不能同时接受string和sz
+    // 返回第一个使谓词返回非0值得的元素的迭代器
 
+    // 计算满足的个数
+    auto count = words.end() - wc;
+    cout << count << " " << make_plural(count, "word", "s")
+         << " of length " << sz << " or longer" << endl;
+
+    // for_each算法
+    for_each(wc, words.end(), 
+             [](const string &s){cout << s << " ";});
+    cout << endl;
+}
 ```
