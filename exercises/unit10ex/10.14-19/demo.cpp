@@ -40,9 +40,58 @@ void f3(vector<Sales_data> &sv)
         cout << e.isbn() << endl;
 }
 
-
 //10.18
+void elimDups(vector<string> &words)
+{
+    sort(words.begin(), words.end());
+    auto end_unique = unique(words.begin(), words.end());
+    words.erase(end_unique, words.end());
+}
+bool isShorter(const string &s1, const string &s2)
+{
+    return s1.size() < s2.size();
+}
+void biggies(vector<string> &words, vector<string>::size_type sz)
+{
+    //elimDups(words);
+    //stable_sort(words.begin(), words.end(), isShorter);
+    auto wc = partition(words.begin(), words.end(),
+         [sz](const string &a){ return a.size() >= sz; }); 
+    // find_if第三个参数是一个一元谓词，不能同时接受string和sz
+    // 返回第一个使谓词返回非0值得的元素的迭代器
 
+    // 计算满足的个数
+    auto count = wc - words.begin();
+    cout << count << endl;
+
+    // for_each算法
+    for_each(words.begin(), wc,
+             [](const string &s){cout << s << " ";});
+    cout << endl;
+}
+
+//10.19
+void stable_biggies(vector<string> &words, vector<string>::size_type sz)
+{
+    for_each(words.begin(), words.end(),
+             [](const string &s){cout << s << " ";});
+    cout << endl;
+    //elimDups(words);
+    //stable_sort(words.begin(), words.end(), isShorter);
+    auto wc = stable_partition(words.begin(), words.end(),
+         [sz](const string &a){ return a.size() >= sz; }); 
+    // find_if第三个参数是一个一元谓词，不能同时接受string和sz
+    // 返回第一个使谓词返回非0值得的元素的迭代器
+
+    // 计算满足的个数
+    auto count = wc - words.begin();
+    cout << count << endl;
+
+    // for_each算法
+    for_each(words.begin(), wc,
+             [](const string &s){cout << s << " ";});
+    cout << endl;
+}
 
 int main()
 {
@@ -50,4 +99,7 @@ int main()
 
     f2(1);
     f3(sv);
+    vector<string> vv = {"May", "the", "force", "be", "with", "you"};
+    //biggies(vv, 3);
+    stable_biggies(vv, 3);
 }
