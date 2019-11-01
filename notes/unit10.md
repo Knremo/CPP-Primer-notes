@@ -118,4 +118,43 @@ void biggies(vector<string> &words, vector<string>::size_type sz)
 stable_partition
 
 ## 10.3.3 lambda捕获和返回
-好吧
+### 值捕获
+变量在lambda创建时拷贝，修改不影响lambda
+```c++
+size_t v1 = 42;
+auto f = [v1]{return v1;};
+v1 = 0;
+auto j = f();
+```
+### 引用捕获
+```c++
+void biggies(vector<string> &words,
+             vector<string>::size_type sz,
+             ostream &os = cout, char c = ' ')
+{
+    ...
+
+    for_each(words.begin(), words.end(),
+             [&os, c](const string &s){ os << s << c; });
+}
+```
+### 隐式捕获
+编译器推断捕获列表，&引用方式，=值捕获
+```c++
+wc = find_if(words.begin(), words.end(),
+             [=](const string &s){return s.size() >= sz;});
+
+// 混合使用
+void biggies(vector<string> &words,
+             vector<string>::size_type sz,
+             ostream &os = cout, char c = ' ')
+{
+    ...
+    // os隐式捕获，引用方式，c显式捕获，值方式
+    for_each(words.begin(), words.end(),
+             [&, c](const string &s){ os << s << c; });
+    // os显式捕获，引用方式，c隐式捕获，值方式
+    for_each(words.begin(), words.end(),
+             [=, &os](const string &s){ os << s << c; });
+}
+```
