@@ -158,3 +158,21 @@ void biggies(vector<string> &words,
              [=, &os](const string &s){ os << s << c; });
 }
 ```
+### 可变lambda
+改变一个被捕获的变量的值
+```c++
+size_t v1 = 42;
+auto f = [v1]() mutable {return ++v1;};
+```
+引用捕获的变量是否可修改依赖于是否const
+
+### 指定lambda返回类型
+如果一个lambda包含return之外的任何语句，假定返回void
+
+定义返回类型
+```c++
+transform(vi.begin(), vi.end(), vi.begin(),
+          [](int i) -> int
+          {if (i < 0) return -i; else return i;});
+```
+
