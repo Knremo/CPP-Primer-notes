@@ -293,11 +293,6 @@ s2.append("ssss");
 
 s2.replace(11, 3, "sdasdas") //从位置11开始删除3个字符并插入
 ```
-！
-！
-！9.43-46
-！
-！
 
 ## 9.5.3 string搜索操作
 返回下标`string::size_type`类型，如果搜索失败，返回一个`string::npos`
