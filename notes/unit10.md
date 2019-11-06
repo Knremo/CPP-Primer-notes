@@ -176,4 +176,19 @@ transform(vi.begin(), vi.end(), vi.begin(),
           {if (i < 0) return -i; else return i;});
 ```
 ## 10.3.4 参数绑定
+### 标准库bind函数
+```c++
+#include <functional>
 
+auto newCallable = bind(callable, arg_list);
+```
+check_size
+```c++
+bool check_size(const string &s, string::size_type sz)
+{
+    return s.size() >= sz;
+}
+auto wc = find_if(words.begin(), words.end(),
+                  bind(check_size, _1, sz));
+```
+### placeholders
