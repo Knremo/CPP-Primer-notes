@@ -192,3 +192,30 @@ auto wc = find_if(words.begin(), words.end(),
                   bind(check_size, _1, sz));
 ```
 ### placeholders
+_n定义在placeholders命名空间
+
+`using std::placeholders::_1;`
+
+`using namespace std::placeholders;`
+
+### bind的参数
+```c++
+//f 有5个参数
+auto g = bind(f, a, b, _2, c, _1);
+//g 是2个参数
+//g(X, Y) == f(a, b, Y, c, X)
+```
+### 用bind重排参数顺序
+
+### 绑定引用参数
+```c++
+ostream &print(ostream &os, const string &s, char c)
+{
+    return os << s << c;
+}
+
+for_each(words.begin(), words.end(), bind(print, ref(os), _1, ' '));
+// ref返回一个对象，包含给定的引用，此对象是可拷贝的
+// ref，cref定义在头文件functional
+```
+# 10.4 在探迭代器
