@@ -219,3 +219,18 @@ for_each(words.begin(), words.end(), bind(print, ref(os), _1, ' '));
 // ref，cref定义在头文件functional
 ```
 # 10.4 在探迭代器
+iterator头文件
+## 10.4.1 插入迭代器
+```c++
+auto it = inserter(c, iter);
+*it = val;
+
+// lst = {1,2,3,4}
+copy(lst.cbegin(), lst.cend(), front_inserter(lst2)); //lst2 = {4,3,2,1}
+copy(lst.cbegin(), lst.cend(), inserter(lst3, lst3.begin())); //lst3 = {1,2,3,4}
+
+inserter(c, iter)
+front_inserter(iter)
+back_inserter(iter)
+```
+## 10.4.2 iostream迭代器
