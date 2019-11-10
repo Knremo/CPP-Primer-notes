@@ -234,3 +234,4 @@ front_inserter(iter)
 back_inserter(iter)
 ```
 ## 10.4.2 iostream迭代器
+@@
