@@ -234,4 +234,51 @@ front_inserter(iter)
 back_inserter(iter)
 ```
 ## 10.4.2 iostream迭代器
-@@
+### istream_iterator操作
+```c++
+istream_iterator<int> in_iter(cin);
+istream_iterator<int> eof; // 尾后迭代器
+while (in_iter != eof)
+{
+    vec.push_back(*in_iter++);
+}
+
+//
+istream_iterator<int> in_iter(cin), eof;
+vector<int> vec(in_iter, eof);
+```
+### 使用算法操作流迭代器
+```c++
+istream_iterator<int> in(cin), eof;
+cout << accumulate(in, eof, 0) << endl;
+```
+### 允许懒惰求值
+
+### ostream_iterator操作
+```c++
+ostream_iterator<int> out_iter(cout, " ");
+for (auto e : vec)
+    *out_iter++ = e; //或 out_iter = e;
+cout << endl;
+
+copy(vec.begin(), vec.end(), out_iter);
+cout << endl;
+```
+### 使用流迭代器处理类类型
+```c++
+istream_iterator<Sales_item> item_iter(cin), eof;
+ostream_iterator<Sales_item> out_iter(cout, "\n");
+
+Sales_item sum = *item_iter++;
+while (item_iter != eof)
+{
+    if (item_iter->isbn() == sum.isbn())
+        sum += *item_iter++;
+    else 
+    {
+        out_iter = sum;
+        sum = *item_iter++;
+    }
+}
+out_iter = sum;
+```
