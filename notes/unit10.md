@@ -282,3 +282,5 @@ while (item_iter != eof)
 }
 out_iter = sum;
 ```
+## 10.4.3 反向迭代器
+除了forward_list，流迭代器,其他容器都支持
