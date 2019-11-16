@@ -284,4 +284,9 @@ out_iter = sum;
 ```
 ## 10.4.3 反向迭代器
 除了forward_list，流迭代器,其他容器都支持
-电脑突然凉了有点慌
+
+打印最后一个单词
+```c++
+auto rcomma = find(line.crbegin(), line.crend(), ',');
+cout << string(rcomma.base(), line.cend()) << endl;
+```
