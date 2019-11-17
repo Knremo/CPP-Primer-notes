@@ -288,5 +288,5 @@ out_iter = sum;
 打印最后一个单词
 ```c++
 auto rcomma = find(line.crbegin(), line.crend(), ',');
-cout << string(rcomma.base(), line.cend()) << endl;
+cout << string(rcomma.base(), line.cend()) << endl; //base()指向下一个元素
 ```
