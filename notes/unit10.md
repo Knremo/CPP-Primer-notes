@@ -290,3 +290,45 @@ out_iter = sum;
 auto rcomma = find(line.crbegin(), line.crend(), ',');
 cout << string(rcomma.base(), line.cend()) << endl; //base()指向下一个元素
 ```
+
+# 10.5 泛型算法结构
+## 10.5.1 5类迭代器
+### 输入迭代器
+支持读
+```c++
+==, !=
+++
+*
+->
+```
+单遍扫描算法，find，accumulate
+
+istream_iterator是一种输入迭代器
+### 输出迭代器
+支持写
+```c++
+++
+*
+```
+单遍扫描算法，copy
+
+ostream_iterator是一种输入迭代器
+### 前向迭代器
+读写
+
+replace
+### 双向迭代器
+读写，双向迭代器
+
+支持--
+
+reverse
+### 随机访问迭代器
+支持
+```c++
+<,<=,>,>=
++,+=,-,-=
+-
+[n]
+```
+sort
