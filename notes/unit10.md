@@ -331,4 +331,6 @@ reverse
 -
 [n]
 ```
-sort
+sort和array,deque,string,vector的迭代器
+
+## 10.5.2 算法形参模式
