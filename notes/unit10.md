@@ -337,3 +337,5 @@ sort和array,deque,string,vector的迭代器
 
 ## 10.5.3 算法命名规范
 
+# 10.6 特定容器算法
+
