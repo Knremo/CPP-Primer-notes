@@ -338,4 +338,24 @@ sort和array,deque,string,vector的迭代器
 ## 10.5.3 算法命名规范
 
 # 10.6 特定容器算法
+list,forward_list
+```c++
+lst.merge(lst2) // 合并
+lst.merge(lst2, comp) //给定的比较操作
 
+lst.remove(val) // 删除值val
+lst.remove_if(pred)
+
+lst.reverse() //反转顺序
+
+lst.sort()
+lst.sort(comp)
+
+lst.unique()
+lst.unique(pred)
+
+lst.splice(args)/flst.splice_after(args)
+args: (p, lst2) //将lst2的所有元素移动到lst的p之前或flst的p之后
+      (p, lst2, p2) //p2是lst2的
+      (p, lst2, b, e)
+```
