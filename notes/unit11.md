@@ -24,3 +24,9 @@ while (cin >> word)
 ```
 ## 11.2 定义关联容器
 ### 11.2.1 定义关联容器
+```c++
+map<string, size_t> word_count;
+set<string> exclude = {"the"};
+map<string, string> authors = {{"a", "b"}};
+```
+### 11.2.2 关键字类型的要求
