@@ -30,4 +30,15 @@ set<string> exclude = {"the"};
 map<string, string> authors = {{"a", "b"}};
 ```
 ### 11.2.2 关键字类型的要求
-hun
+有<, 严格弱序
+
+自己定义关键字类型
+```c++
+bool compareIsbn(const Sale_data &lhs, const Sale_data &rhs) 
+{
+    return lhs.isbn() < rhs.isbn();
+}
+
+multiset<Sales_data, decltype(compareIsbn) *> bookstore(compareIsbn);
+//set<Sale_data, bool (*)(const Sale_data&, const Sale_data&)> s(compareIsbn);
+```
