@@ -42,3 +42,5 @@ bool compareIsbn(const Sale_data &lhs, const Sale_data &rhs)
 multiset<Sales_data, decltype(compareIsbn) *> bookstore(compareIsbn);
 //set<Sale_data, bool (*)(const Sale_data&, const Sale_data&)> s(compareIsbn);
 ```
+
+混
