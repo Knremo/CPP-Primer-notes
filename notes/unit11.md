@@ -42,5 +42,38 @@ bool compareIsbn(const Sale_data &lhs, const Sale_data &rhs)
 multiset<Sales_data, decltype(compareIsbn) *> bookstore(compareIsbn);
 //set<Sale_data, bool (*)(const Sale_data&, const Sale_data&)> s(compareIsbn);
 ```
+### 11.2.3 pair类型
+utility头文件
 
-混
+生成特定类型的模板
+
+```c++
+pair<string, string> anon;
+pair<string, string> author = {"James", "Joyce"};
+
+//数据成员public
+w.first, w.second
+
+//pair上的操作
+pair<T1, T2> p;
+pair<T1, T2> p(v1, v2);
+pair<T1, T2> p = {v1, v2};
+
+make_pair(v1, v2); // 返回一个pair
+
+p1 < > <= >= p2
+
+p1 == p2
+p1 != p2
+```
+
+#### 创建pair对象的函数
+```c++
+pair<string, int> process(vector<string> &v)
+{
+    if (!v.empty())
+        return {v.back(), v.back().size()};
+    else
+        return pair<string, int>();
+}
+```
