@@ -77,3 +77,33 @@ pair<string, int> process(vector<string> &v)
         return pair<string, int>();
 }
 ```
+## 11.3 关联容器操作
+```c++
+set<string>::value_type v1; // string
+set<string>::key_type v2; // string
+map<string, int>::value_type v3; // pair<const string, int>
+map<string, int>::key_type v4; // string
+map<string, int>::mapped_type v5; // int
+```
+### 11.3.1 关联容器迭代器
+```c++
+auto map_it = word_count.begin();
+// *map_it pair<>
+cout << map_it->first; // first const
+++map_it->second;
+```
+#### set的迭代器是const的
+不能修改
+
+#### 遍历关联容器
+```c++
+auto map_it = word_count.cbegin();
+while (map_it != word_count.cend())
+{
+    ...
+    ++map_it;
+}
+```
+
+#### 关联容器和算法
+使用find成员而不是泛型find
