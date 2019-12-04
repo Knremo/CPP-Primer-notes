@@ -107,3 +107,34 @@ while (map_it != word_count.cend())
 
 #### 关联容器和算法
 使用find成员而不是泛型find
+
+### 11.3.2 添加元素
+set
+```c++
+vector<int> ivec = {2, 4, 6, 8, 2, 4, 6, 8};
+set<int> set2;
+set2.insert(ivec.cbegin(), ivec.cend());
+set2.insert({1, 3, 5, 7, 1, 3, 5, 7}); // 只会插入不重复的元素
+
+map
+```c++
+word_count.insert({word, 1});
+word_count.insert(make_pair(word, 1));
+word_count.insert(pair<string, size_t>(word, 1));
+word_count.insert(map<string, size_t>::vlaue_type(word, 1));
+
+c.emplace(args)
+```
+#### 检测insert的返回值
+返回一个pair，first迭代器指向给定关键字的元素，second成员是bool指出是否插入成功
+```c++
+auto ret = word_count.insert({word, 1});
+if (!ret.second)
+    ++ret.first->second;
+
+// or
+while (cin >> word)
+    ++word_count.insert({word, 0}).first->second;
+```
+## 11.3.3 删除元素
+
