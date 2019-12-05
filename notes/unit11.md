@@ -151,3 +151,38 @@ c.at(k)
 ```
 map下标操作获得一个mapped_type对象(int)，解引用一个map迭代器时得到一个value_type对象(pair)
 
+### 11.3.5 访问元素
+```c++
+//下标和at操作只适用于非const的map和unordered_map
+c.find(k)
+c.count(k)
+c.lower_bound(k) //返回第一个关键字不小于k的元素的迭代器
+c.upper_bound(k) //大于
+c.equal_range(k) //返回一个迭代器pair，表示关键字等于k的元素的范围，k不存在等于c.end()
+```
+#### 在multimap,multiset中查找元素
+相同关键字在容器中会相邻存储
+```c++
+string search_item("A");
+auto entries = authors.count(search_item);
+auto iter = authors.find(search_item);
+while (entries)
+{
+    cout << iter->second << endl;
+    ++iter;
+    --entries;
+}
+```
+or
+```c++
+for (auto beg = authors.lower_bound(search_item),
+          end = authors.upper_bound(search_item);
+     beg != end; ++beg)
+    cout << beg->second << endl;
+```
+or
+```c++
+for (auto pos = authors.equal_range(search_item);
+     pos.first != pos.second; ++pos.first)
+    cout << pos.first->second << endl;
+```
