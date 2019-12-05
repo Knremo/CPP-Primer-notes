@@ -136,5 +136,18 @@ if (!ret.second)
 while (cin >> word)
     ++word_count.insert({word, 0}).first->second;
 ```
-## 11.3.3 删除元素
+### 11.3.3 删除元素
+```c++
+c.erase(k) //k关键字，返回删除的数量
+c.erase(p) // p迭代器，返回p之后元素的迭代器
+c.erase(b, e) // 一对迭代器，返回e
+```
+
+### 11.3.4 map的下标操作
+只有map，unordered_map
+```c++
+c[k]
+c.at(k)
+```
+map下标操作获得一个mapped_type对象(int)，解引用一个map迭代器时得到一个value_type对象(pair)
 
