@@ -40,11 +40,10 @@ int delEntry(multimap<string, vector<string>>& m, const string& s)
 //11.32
 void sortWorks(multimap<string, vector<string>>& m)
 {
-    
-    
     for (auto e:m)
     {
-        cout << e.first << " ";
+        cout << e.first << endl;
+        stable_sort(e.second.begin(), e.second.end());
         for (auto c:e.second)
             cout << c << "-";
         cout << endl;

@@ -186,3 +186,88 @@ for (auto pos = authors.equal_range(search_item);
      pos.first != pos.second; ++pos.first)
     cout << pos.first->second << endl;
 ```
+### 11.3.6 一个单词转换的map
+```c++
+map<string, string> buildMap(ifstream &map_file)
+{
+    map<string, string> trans_map;
+    string key;
+    string value;
+    while (map_file >> key && getline(map_file, value))
+        if (value.size() > 1)
+            trans_map[key] = value.substr(1); // 去除前面的空格
+        else
+            throw runtime_error("no rule for " + key);
+    return trans_map;
+}
+
+const string& transform(const string &s, const map<string, string> &m)
+{
+    auto map_it = m.find(s);
+    if (map_it != m.cend())
+        return map_it->second;
+    else
+        return s;
+}
+
+void word_transform(ifstream &map_file, ifstream &input)
+{
+    auto trans_map = buildMap(map_file);
+    string text;
+    while (getline(input, text))
+    {
+        istringstream stream(text);
+        string word;
+        bool firstword = true;
+        while (stream >> word)
+        {
+            if (firstword)
+                firstword = false;
+            else
+                cout << " ";
+            cout << transform(word, trans_map);
+        }
+        cout << endl;
+    }
+}
+```
+
+## 11.4 无序容器
+哈希函数
+
+find,insert...
+
+管理桶
+```c++
+//桶接口
+c.bucket_count() // 正在使用的桶的数目
+c.max_bucket_count() // 容器能容纳的最多的桶的数量
+c.bucket_size(n) // 第n个桶中有多少个元素
+c.bucket(k) // 关键字为k的元素在哪个桶中
+//桶迭代
+local_iterator // 访问桶中元素的迭代器类型
+const_local_iterator
+c.begin(n),c.end(n) //
+c.cbegin(n),c.cend(n)
+//哈希策略
+c.load_factor() // 每个桶的平均元素数量，返回float值
+c.max_load_factor() // 
+c.rehash(n) // 重组存储，使得bucket_count>=n,且bucket_count>size/max_load_factor
+c.reserve(n) // 重组存储，使得c可以保存n个元素且不必rehash
+```
+
+默认使用关键字类型的==运算符来比较元素，使用hash<key_type>类型的对象来生成每个元素的哈希值
+
+自定义关键字类型
+```c++
+size_t hashser(const Sales_data &sd)
+{
+    return hash<string>() (sd.isbn());
+}
+bool eqOp(const Sales_data &lhs, const Sales_data &rhs)
+{
+    return lhs.isbn() == rhs.isbn();
+}
+using SD_multiset = unordered_multiset<Sales_data, decltype(hasher) *, decltype(eqOp) *>;
+SD_multiset bookstore(42, hasher, eqOp);
+```
