@@ -85,3 +85,37 @@ void StrBlob::pop_back()
 
 对于构造函数分配的vector，当最后一个指向它的对象被销毁时，它会自动销毁
 ### 12.1.2 直接管理内存
+new delete
+
+```c++
+int *pi = new int;  //默认初始化
+string *ps = new string;
+
+int *pi = new int(1024);
+string *ps = new string(10, '9');
+
+vector<int> *pv = new vector<int>{0, 1, 2, 3, 4, 5};
+
+int *pi2 = new int(); //值初始化为0
+
+auto p1 = new auto(obj); //自动推断
+
+//const
+const int *pci = new const int(1024);
+const string *pcs = new const string;
+//const对象必须初始化
+
+//内存耗尽
+//抛出bad_alloc异常
+//如果分配失败new返回一个空指针
+//头文件 new
+int *p1 = new int; // std::bad_alloc
+int *p2 = new (nothrow) int; //返回空指针
+
+//释放
+delete p;
+delete pci; // const对象
+```
+记得释放
+
+### 12.1.3 shared_ptr和new结合使用
