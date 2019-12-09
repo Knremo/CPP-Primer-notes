@@ -119,3 +119,44 @@ delete pci; // const对象
 记得释放
 
 ### 12.1.3 shared_ptr和new结合使用
+接受指针参数的智能指针构造函数是explicit的，必须使用直接初始化
+```c++
+shared_ptr<int> p1 = new int(1024); // xxxxx
+shared_ptr<int> p2(new int(1024)); // ok
+
+shared_ptr<int> clone(int p)
+{
+    return shared_ptr<int>(new int(p));
+}
+
+shared_ptr<T> p(q) //p管理内置指针q所指的对象
+shared_ptr<T> p(u) //p从unique_ptr u接管对象所有权将u置为空
+shared_ptr<T> p(q, d) //p将使用d来代替delete
+
+p.reset() //若p是唯一释放
+p.reset(q) //将p指向q
+p.reset(q, d) //调用d释放
+```
+#### 不要使用get初始化另一个智能指针
+```c++
+shared_ptr<int> p(new int(42)); //引用计数1
+int *q = p.get(); // ok
+{
+    // 两个独立的shared_ptr指向相同的内存
+    shared_ptr<int>(q);
+} // 程序块结束q被销毁指向的内存被释放
+// p指向的内存已被释放
+int foo = *p;
+```
+#### 其他操作
+将新的指针赋予shared_ptr
+```c++
+p.reset(new int(1024));
+```
+改变底层对象时如果不是仅有的用户则制作一份新的拷贝
+```c++
+if (!p.unique())
+    p.reset(new string (*p));
+*p += newVal;
+```
+### 12.1.4 智能指针和异常
