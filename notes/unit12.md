@@ -160,3 +160,38 @@ if (!p.unique())
 *p += newVal;
 ```
 ### 12.1.4 智能指针和异常
+使用shared_ptr管理没有定义析构函数的类
+```c++
+struct destination; // 正在连接什么
+struct connection;  // 使用连接所需的信息
+connection connect(destination*); // 打开连接
+void disconnect(connection); // 关闭给定的连接
+
+void f(destination &d)
+{
+    // 获得一个连接
+    connection c = connect(&d);
+    // 使用连接
+    // 如果在f退出前忘记调用disconnect，就无法关闭c
+}
+
+//使用shared_ptr
+// 定义deleter
+void end_connection(connection *p) {disconnect(*p);}
+
+void f(destination &d)
+{
+    connection c = connect(&d);
+    shared_ptr<connection> p(&c, end_connection);
+    //当f退出时，connection会被正确关闭
+}
+```
+
+TIPS:
+* 不使用相同的内置指针值初始化(reset)多个智能指针
+* 不delete get()返回的指针
+* 不使用get()初始化或reset另一个智能指针
+* 如果使用get()返回的指针，当最后一个智能指针销毁后指针就无效了
+* 如果使用智能指针管理的资源不是new分配的内存，传递一个删除器
+
+### 12.1.5 unique_ptr
