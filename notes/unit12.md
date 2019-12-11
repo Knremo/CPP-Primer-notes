@@ -195,3 +195,59 @@ TIPS:
 * 如果使用智能指针管理的资源不是new分配的内存，传递一个删除器
 
 ### 12.1.5 unique_ptr
+```c++
+unique_ptr<double> p1; //
+unique_ptr<int> p2(new int(42));
+
+//不支持普通的拷贝赋值操作
+//unique_ptr<string> p2(p1);  xxxxxx
+//p3 = p2; xxxxxxx
+
+unique_ptr<T, D> u2; //使用一个类型为D的可调用对象来释放它的指针
+unique_ptr<T, D> u(d); //空，指向类型为T的对象，用类型为D的对象d代替delete
+
+u = nullptr; //释放u指向的对象，将u置为空
+
+u.release(); //u放弃对指针的控制权，返回指针并将u置为空
+u.reset(); //释放u指向的对象
+u.reset(q); //令u指向q
+u.reset(nullptr); 
+```
+转移
+```c++
+// p1 -> p2
+unique_ptr<string> p2(p1.release()); //将p1置为空
+unique_ptr<string> p3(new string("Trex"));
+// p3 -> p2
+p2.reset(p3.release()); //reset释放p2原来指向的内存
+```
+#### 传递参数和返回
+"拷贝"即将销毁的对象
+```c++
+unique_ptr<int> clone(int p)
+{
+    return unique_ptr<int>(new int(p));
+}
+
+unique_ptr<int> clone(int p)
+{
+    unique_ptr<int> ret(new int (p));
+    return ret;
+}
+```
+#### 传递删除器
+```c++
+unique_ptr<objT, delT> p(new objT, fcn);
+//p指向一个类型为objT的对象，并使用一个类型为delT的对象释放objT对象
+//他会调用一个名为fcn的delT类型对象
+
+void f(destination &d)
+{
+    connection c = connect(&d);
+    //当p被销毁时，连接将会关闭
+    unique_ptr<connection, decltype(end_connection) * > p(&c, end_connection);
+    //使用连接
+    //当f退出时connection会被正确关闭
+}
+```
+### 12.1.6 weak_ptr
