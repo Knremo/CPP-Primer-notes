@@ -388,3 +388,15 @@ B::f2() {}
 * 类成员返回本身是 `*this`
 
 ## 12.2 动态数组
+### 12.2.1 new和数组
+new分配一个对象数组
+```c++
+int *pia = new int[get_size()]; //指向第一个int
+```
+不能用begin，end，范围for
+
+#### 初始化
+```c++
+int *pia = new int[10]; //10个未初始化的int
+int *pia2 = new int[10](); //10个初始化为0的int
+string *psa = new string[10]
