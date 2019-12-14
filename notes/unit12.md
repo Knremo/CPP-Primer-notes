@@ -399,4 +399,41 @@ int *pia = new int[get_size()]; //指向第一个int
 ```c++
 int *pia = new int[10]; //10个未初始化的int
 int *pia2 = new int[10](); //10个初始化为0的int
-string *psa = new string[10]
+string *psa = new string[10]; //10个空string
+string *psa2 = new string[10](); //10个空string
+
+string *psa3 = new string[10]{"a", "an", "the", string[3, 'x']};
+//初始化失败
+//new头文件
+//bad_array_new_length
+```
+#### 动态分配空数组
+```c++
+char arr[0]; //xxxx
+char *cp = new char[0]; // ok
+
+size_t n = get_size(); // n == 0
+int *p = new int[n];
+for (int* q = p; q != p + n; ++q)
+    ...;
+```
+#### 释放动态数组
+```c++
+delete [] pa;
+```
+#### 智能指针管理动态数组
+```c++
+unique_ptr<int []> up(new int[10]);
+up.release(); //自动用delete[]销毁
+
+//不能使用点和箭头成员运算符
+//可以下标运算
+for (size_t i = 0; i != 10; ++i)
+    up[i] = i;
+
+unique_ptr<int []> u(p); //指向内置指针p指向的动态数组
+
+// shared_ptr需要一个deleter
+shared_ptr<int> sp(new int[10], [](int *p){delete [] p;});
+```
+### 12.2.2 allocator类
