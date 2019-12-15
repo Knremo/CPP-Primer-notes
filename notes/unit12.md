@@ -437,3 +437,77 @@ unique_ptr<int []> u(p); //指向内置指针p指向的动态数组
 shared_ptr<int> sp(new int[10], [](int *p){delete [] p;});
 ```
 ### 12.2.2 allocator类
+分离内存分配和对象构造
+```c++
+allocator<T> a //
+a.allocate(n)  //保存n个类型为T的对象
+a.deallocate(p, n) //释放从T*指针p中地址开始的内存，这块内存保存了n个类型为T的对象
+                   //p必须是一个先前由allocate返回的指针，n必须是那个大小
+                   //之前必须对每个对象调用destory
+a.construct(p, args) //构造对象
+a.destory(p)       //
+```
+```c++
+allocator<string> alloc;
+auto const p = alloc.allocate(n);
+auto q = p; //q指向最后构造的元素之后的位置
+alloc.construct(q++); //*q为空字符串
+alloc.construct(q++, 10, 'c'); //*q为cccccccccc
+alloc.construct(q++, "hi"); //*q为hi
+
+while (q != p)
+    alloc.destory(--q);
+
+alloc.deallocte(p, n);
+```
+#### 拷贝和填充未初始化内存的算法
+```c++
+uninitialized_copy(b, e, b2) //把be中的元素拷贝到b2指定的未构造的原始内存中
+uninitialized_copy_n(b, n, b2) //从b拷贝n个元素到b2
+uninitialized_fill(b, e, t) //在迭代器be指定的原始内存范围中创建对象，对象均为t的拷贝
+uninitialized_fill_n(b, n, t) //n个
+
+auto p = alloc.allocate(vi.size()*2); //分配动态内存空间
+auto q = uninitialized_copy(vi.begin(), vi.end(), p); //返回指针指向最后一个构造的元素之后的位置
+uninitialized_fill_n(q, vi.size(), 42); //将剩余元素初始化为42
+```
+## 12.3 文本查询程序
+### 12.3.1 程序设计
+任务
+* 逐行读取文件并分解为独立的单词
+* 每个单词的行号，行号升序无重复，打印一行
+
+设计
+* vector<string>每个元素保存一行
+* istringstream将每行分解为单词
+* set保存每个单词的行号
+* map将每个单词与他的行号set关联
+
+#### 数据结构
+TextQuery类
+包含vector map
+读取文件构造函数 查询操作
+
+结果类QueryResult
+print
+
+#### 类之间共享数据
+指向TextQuery内部对象的指针，避免拷贝操作
+
+防止提前销毁
+
+#### 使用TextQuery类
+```c++
+void runQueries(ifstream &infile)
+{
+    TextQuery tq(infile);
+    while (true)
+    {
+        cout << "word to query:";
+        string s;
+        if (!(cin >> s) || s == "q") break;
+        print(cout, tq.query(s)) << endl;
+    }
+}
+```
+### 12.3.2 定义
