@@ -179,3 +179,49 @@ int main()
 }
 ```
 ### 13.1.4 三/五法则
+#### 需要析构函数的类也需要拷贝和赋值操作
+合成析构函数不会delete一个指针数据成员
+
+```c++
+class HasPtr
+{
+public:
+    HasPtr(const string &s = string()):
+        ps(new string(s)), i(0) { }
+    ~HasPtr() { delete ps; }
+    // ...
+}
+```
+如果使用合成拷贝构造和赋值函数，多个对象的ps可能指向同一个内存，可能delete多次
+#### 需要拷贝操作的类也需要赋值操作，反之亦然
+
+### 13.1.5 使用=default
+```c++
+class Sales_data
+{
+public:
+    Sales_data() = default;
+    Sales_data(const Sales_data&) = default;
+    Sales_data& opreator=(const Sales_data &);
+    ~Sales_data() = default;
+};
+Sales_data& Sales_data::opreator=(const Sales_data&) = default;
+```
+### 13.1.6 阻止拷贝
+#### 定义删除的函数
+```c++
+struct NoCopy
+{
+    NoCopy() = default;
+    NoCopy(const NoCopy&) = delete; //阻止拷贝
+    NoCopy &operator=(const NoCopy&) = delete; //阻止赋值
+    ~NoCopy() = default; 
+}
+```
+析构函数不能是删除的成员
+
+合成的拷贝控制成员可能是删除的
+
+对于有引用类型的类合成拷贝赋值运算符被定义为删除的
+
+
