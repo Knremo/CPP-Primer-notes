@@ -224,4 +224,34 @@ struct NoCopy
 
 对于有引用类型的类合成拷贝赋值运算符被定义为删除的
 
+## 13.2 拷贝控制和资源管理
+### 13.2.1 行为像值的类
+```c++
+class HasPtr
+{
+public:
+    HasPtr(const std::string &s = std::string()):
+        ps(new std::string(s)), i(0) { }
+    HasPtr(const HasPtr&): ps(new string(*o.ps)), i(o.i) { }
+    HasPtr& operator=(const HasPtr&);
+    ~HasPtr() { delete ps; }
+private:
+    std::string *ps;
+    int i;
+};
+```
+#### 赋值运算符
+赋予自身ok，先销毁左侧
 
+先将右侧运算对象拷贝到一个局部临时对象中，拷贝完成，销毁左侧运算对象，从临时拷贝到左侧
+
+```c++
+HasPtr& HasPtr::operator=(const HasPtr& rhs)
+{
+    auto newp = new string(*rhs.ps);
+    delete ps;
+    ps = newp;
+    i = rhs.i;
+    return *this;
+}
+```
