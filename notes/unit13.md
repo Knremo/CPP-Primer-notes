@@ -255,3 +255,4 @@ HasPtr& HasPtr::operator=(const HasPtr& rhs)
     return *this;
 }
 ```
+### 13.2.2 定义行为像指针的类
