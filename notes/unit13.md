@@ -298,4 +298,27 @@ HasPtr& HasPtr::operator=(const HasPtr &rhs)
 }
 ```
 ## 13.3 交换操作
-swap
+```c++
+class HasPtr
+{
+    friend void swap(HasPtr&， HasPtr&);
+    // ...
+};
+inline
+void swap(HasPtr &lhs, HasPtr &rhs)
+{
+    using std::swap;
+    swap(lhs.ps, rhs.ps); //如果存在类型特定的swap版本，其匹配程度会优于std中定义的版本
+    swap(lhs.i, rhs.i);
+}
+```
+#### 在赋值运算符中使用swap
+拷贝并交换，将左侧运算对象与右侧运算对象 的一个副本进行交换
+```c++
+HasPtr& HasPtr::operator=(HasPtr rhs) //按值传递，拷贝构造函数将右侧运算对象中的string拷贝到rhs
+{
+    swap(*this, rhs); //交换左侧对象与rhs，rhs指向对象曾经使用的内存
+    return *this; // rhs被销毁，delete了rhs中的指针
+}
+```
+## 13.4 拷贝控制示例
