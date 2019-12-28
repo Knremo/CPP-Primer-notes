@@ -301,8 +301,17 @@ HasPtr& HasPtr::operator=(const HasPtr &rhs)
 ```c++
 class HasPtr
 {
-    friend void swap(HasPtr&， HasPtr&);
-    // ...
+    friend void swap(HasPtr &, HasPtr &);
+public:
+    HasPtr(const std::string &s = std::string()) : ps(new std::string(s)), i(0) {}
+    HasPtr(const HasPtr &);
+    ~HasPtr();
+    HasPtr &operator=(const HasPtr &);
+    bool operator<(const HasPtr &) const;
+    void info() { cout << *ps << endl; }
+private:
+    std::string *ps;
+    int i;
 };
 inline
 void swap(HasPtr &lhs, HasPtr &rhs)
@@ -312,6 +321,8 @@ void swap(HasPtr &lhs, HasPtr &rhs)
     swap(lhs.i, rhs.i);
 }
 ```
+vector的元素太少sort不会调用swap
+
 #### 在赋值运算符中使用swap
 拷贝并交换，将左侧运算对象与右侧运算对象 的一个副本进行交换
 ```c++
@@ -322,3 +333,5 @@ HasPtr& HasPtr::operator=(HasPtr rhs) //按值传递，拷贝构造函数将右�
 }
 ```
 ## 13.4 拷贝控制示例
+每个Folder都保存一个包含的Message的set，每个Message都会保存一个Folder的指针set
+Message: save, remove
