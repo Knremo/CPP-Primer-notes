@@ -335,3 +335,6 @@ HasPtr& HasPtr::operator=(HasPtr rhs) //按值传递，拷贝构造函数将右�
 ## 13.4 拷贝控制示例
 每个Folder都保存一个包含的Message的set，每个Message都会保存一个Folder的指针set
 Message: save, remove
+
+
+明年加油！
