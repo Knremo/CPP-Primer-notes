@@ -20,6 +20,8 @@ public:
 
     void save(Folder&); // 将一个Folder加入到Message的指针set，然后把this添加到那个Folder的set
     void remove(Folder&); // 互相删除
+
+    void info();
 private:
     string contents;
     set<Folder*> folders;  // 包含此Message的Folder
@@ -31,6 +33,7 @@ private:
 class Folder
 {
     friend void swap(Folder&, Folder&);
+    friend class Message;
 public:
     Folder(const string &str = "DEFAULT"):
         title(str) { }
@@ -40,9 +43,14 @@ public:
 
     void addMsg(Message*);
     void remMsg(Message*);
+
+    void info();
 private:
     string title;
     set<Message*> messages;
+
+    void remove_from_messages();
+    void add_to_messages();
 };
 
 void Message::save(Folder &f)
@@ -96,6 +104,17 @@ void swap(Message &lhs, Message &rhs)
     for (auto f : rhs.folders)
         f->addMsg(&rhs);
 }
+void Message::info()
+{
+    cout << "* " << contents << " : " << endl;
+    cout << " -" << " folders: ";
+    for (auto f : folders)
+        cout << f->title << " ";
+}
+
+
+
+
 
 void Folder::addMsg(Message *m)
 {
@@ -108,23 +127,29 @@ void Folder::remMsg(Message *m)
 Folder::Folder(const Folder &f):
     title(f.title), messages(f.messages)
 {
-    for (auto m : messages)
-        m->save(*this);
+    add_to_messages();
 }
 Folder& Folder::operator=(const Folder& rhs)
 {
-    for (auto m : messages)
-        m->remove(*this);
+    remove_from_messages();
     title = rhs.title;
     messages = rhs.messages;
-    for (auto m : messages)
-        m->save(*this);
+    add_to_messages();
     return *this;
+}
+void Folder::remove_from_messages()
+{
+    for (auto m : messages)
+        m->remove(*this);    
+}
+void Folder::add_to_messages()
+{
+    for (auto m : messages)
+        m->save(*this);    
 }
 Folder::~Folder()
 {
-    for (auto m : messages)
-        m->remove(*this);
+    remove_from_messages();
 }
 void swap(Folder& lhs, Folder& rhs)
 {
@@ -140,16 +165,37 @@ void swap(Folder& lhs, Folder& rhs)
     for (auto m : rhs.messages)
         m->folders.insert(&rhs);
 }
+void Folder::info()
+{
+    cout << "******* Folder: " << title 
+         << " *******" << endl;
+    for (auto m : messages)
+        cout << m->contents << "--> " << m->folders.size() << endl;
+}
+
+void test()
+{
+    Message* pm1 = new Message("m1");
+    Message* pm2 = new Message("m2");
+    Message* pm3 = new Message("m3");
+    Folder f1("f1"), f2("f2");
+
+    pm1->save(f1);
+    pm2->save(f1);
+    pm2->save(f2);
+    pm3->save(f2);
+
+    f1.info();
+    f2.info();
+
+    pm2->info();
+
+    delete pm1, pm2, pm3;
+}
 
 int main()
 {
-    Message m1("m1"), m2("m2"), m3("m3");
-    Folder f1("f1"), f2("f2");
-
-    f1.addMsg(&m1);
-    f2.addMsg(&m2);
-    f2.addMsg(&m3);
-    f1.addMsg(&m2);
+    test();
 
     return 0;
 }
