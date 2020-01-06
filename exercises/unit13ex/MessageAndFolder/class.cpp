@@ -131,9 +131,10 @@ Folder::Folder(const Folder &f):
 }
 Folder& Folder::operator=(const Folder& rhs)
 {
+    auto msg_tmp = rhs.messages;
     remove_from_messages();
-    title = rhs.title;
-    messages = rhs.messages;
+    title = rhs.title + "-cp";
+    messages = msg_tmp;
     add_to_messages();
     return *this;
 }
@@ -189,6 +190,22 @@ void test()
     f2.info();
 
     pm2->info();
+    cout << endl;
+
+    f1 = f2;
+
+    f1.info();
+    f2.info();
+
+    pm2->info();
+    cout << endl;
+
+    f2 = f2;
+
+    f2.info();
+
+    pm2->info();
+    cout << endl;
 
     delete pm1, pm2, pm3;
 }
@@ -200,4 +217,3 @@ int main()
     return 0;
 }
 
-//快乐！
