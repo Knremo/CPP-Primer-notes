@@ -20,7 +20,7 @@ public:
     string *begin() const { return elements; }
     string *end() const { return first_free; }
     void resize(size_t, const string&);
-    void list();
+    void list() const;
 private:
     static allocator<string> alloc;
 
@@ -116,7 +116,7 @@ void StrVec::resize(size_t n, const string &s = string())
     }
     reallocate();
 }
-void StrVec::list()
+void StrVec::list() const
 {
     auto p = elements;
     while (p != first_free)
