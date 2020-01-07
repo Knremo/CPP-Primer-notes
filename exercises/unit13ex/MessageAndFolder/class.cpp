@@ -10,7 +10,6 @@ class Message
 {
     friend class Folder;
     friend void swap(Message&, Message&); // swap交换后处理指针指向新的
-    friend void swap(Folder&, Folder&);
 public:
     explicit Message(const string &str = ""):
         contents(str) { }
@@ -20,6 +19,9 @@ public:
 
     void save(Folder&); // 将一个Folder加入到Message的指针set，然后把this添加到那个Folder的set
     void remove(Folder&); // 互相删除
+
+    void addFld(Folder* f) { folders.insert(f); }
+    void remFld(Folder* f) { folders.erase(f); }
 
     void info();
 private:
@@ -41,7 +43,7 @@ public:
     Folder& operator=(const Folder&);
     ~Folder();
 
-    void addMsg(Message*);
+    void addMsg(Message*); //仅仅是添加到Folder，而Message没有对应的指针
     void remMsg(Message*);
 
     void info();
@@ -141,12 +143,12 @@ Folder& Folder::operator=(const Folder& rhs)
 void Folder::remove_from_messages()
 {
     for (auto m : messages)
-        m->remove(*this);    
+        m->remFld(this);    
 }
 void Folder::add_to_messages()
 {
     for (auto m : messages)
-        m->save(*this);    
+        m->addFld(this);
 }
 Folder::~Folder()
 {
@@ -156,15 +158,15 @@ void swap(Folder& lhs, Folder& rhs)
 {
     using std::swap;
     for (auto m : lhs.messages)
-        m->folders.erase(&lhs);
+        m->remFld(&lhs);
     for (auto m : rhs.messages)
-        m->folders.erase(&rhs);
+        m->remFld(&rhs);
     swap(lhs.title, rhs.title);
     swap(lhs.messages, rhs.messages);
     for (auto m : lhs.messages)
-        m->folders.insert(&lhs);
+        m->addFld(&lhs);
     for (auto m : rhs.messages)
-        m->folders.insert(&rhs);
+        m->addFld(&rhs);
 }
 void Folder::info()
 {

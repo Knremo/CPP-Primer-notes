@@ -334,10 +334,30 @@ HasPtr& HasPtr::operator=(HasPtr rhs) //按值传递，拷贝构造函数将右�
 ```
 ## 13.4 拷贝控制示例
 每个Folder都保存一个包含的Message的set，每个Message都会保存一个Folder的指针set
-Message: save, remove
-
+Message: save, remove, addFld, remFld
+Folder: addMsg, remMsg
 
 明年加油！
 考试加油！
 
 ## 13.5 动态内存管理类
+vector的简化版本，不使用模板只用于string
+
+StrVec类
+
+allocator分配未构造内存
+三个指针成员：
+element 首元素
+first_free 最后一个元素之后的位置
+cap 分配内存的最后位置
+
+static allocator<string> alloc
+
+alloc_n_copy 分配内存并拷贝
+free 销毁构造的元素并释放内存
+chk_n_alloc 保证至少有容纳一个新元素的空间，如果没有调用reallocate分配更多内存
+reallocate 在内存用完时分配新内存
+
+reallocate()
+移动构造函数
+move() 直接把string管理的内存指向新的，而不是拷贝
