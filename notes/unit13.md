@@ -361,3 +361,5 @@ reallocate 在内存用完时分配新内存
 reallocate()
 移动构造函数
 move() 直接把string管理的内存指向新的，而不是拷贝
+
+## 13.6 对象移动

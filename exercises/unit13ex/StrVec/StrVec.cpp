@@ -3,6 +3,7 @@
 #include <memory>
 #include <utility>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 class StrVec
@@ -20,6 +21,7 @@ public:
     string *begin() const { return elements; }
     string *end() const { return first_free; }
     void resize(size_t, const string&);
+    void reserve(size_t);
     void list() const;
 private:
     static allocator<string> alloc;
@@ -31,6 +33,7 @@ private:
     }
     pair<string *, string *> alloc_n_copy(const string *, const string *);
     void free();
+    void free2();
     void reallocate();
     string *elements;
     string *first_free;
@@ -63,6 +66,14 @@ void StrVec::free()
         alloc.deallocate(elements, cap - elements);
     }
 }
+void StrVec::free2()
+{
+    if (elements)
+    {
+        for_each(elements, first_free, [](string &sp){ alloc.destroy(&sp); });
+        alloc.deallocate(elements, cap - elements);
+    }
+}
 StrVec::StrVec(const StrVec &s)
 {
     cout << "StrVec(const StrVec &s);" << endl;
@@ -73,13 +84,13 @@ StrVec::StrVec(const StrVec &s)
 StrVec::~StrVec()
 {
     cout << "~StrVec();" << endl;
-    free();
+    free2();
 }
 StrVec &StrVec::operator=(const StrVec &rhs)
 {
     cout << "StrVec &operator=(const StrVec&);" << endl;
     auto data = alloc_n_copy(rhs.begin(), rhs.end());
-    free();
+    free2();
     elements = data.first;
     first_free = cap = data.second;
     return *this;
@@ -93,7 +104,7 @@ void StrVec::reallocate()
     auto elem = elements;
     for (size_t i = 0; i != size(); ++i)
         alloc.construct(dest++, std::move(*elem++));
-    free();
+    free2();
     elements = newdata;
     first_free = dest;
     cap = elements + newcapacity;
@@ -115,6 +126,21 @@ void StrVec::resize(size_t n, const string &s = string())
         first_free -= d;
     }
     reallocate();
+}
+void StrVec::reserve(size_t n)
+{
+    if (n > capacity())
+    {
+        auto newdata = alloc.allocate(n);
+        auto dest = newdata;
+        auto elem = elements;
+        for (size_t i = 0; i != size(); ++i)
+            alloc.construct(dest++, std::move(*elem++));
+        free2();
+        elements = newdata;
+        first_free = dest;
+        cap = elements + n;
+    }
 }
 void StrVec::list() const
 {
@@ -148,6 +174,10 @@ int main()
     sv.push_back("2");
     sv.list();
     sv.resize(0);
+    sv.list();
+    sv.reserve(15);
+    sv.list();
+    sv.push_back("aaa");
     sv.list();
     return 0;
 }
