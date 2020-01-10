@@ -392,3 +392,11 @@ int &&rr3 = std::move(rr1); //ok
 ```
 这意味着：除了对rr1赋值或销毁它外，我们将不再使用它
 
+### 13.6.2 移动构造函数和移动赋值运算符
+```c++
+StrVec::StrVec(StrVec &&s) noexcept
+    : elements(s.elements), first_free(s.first_free), cap(s.cap)
+{
+    s.elements = s.first_free = s.cap = nullptr;
+}
+```
