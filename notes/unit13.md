@@ -400,3 +400,37 @@ StrVec::StrVec(StrVec &&s) noexcept
     s.elements = s.first_free = s.cap = nullptr;
 }
 ```
+移动构造函数必须确保移后源对象销毁时无害的，一旦资源完成移动，源对象必须不再指向被移动的资源
+
+noexcept通知标准库构造函数不抛出任何异常
+
+移动构造函数不分配任何鑫内存，接管源对象的内存，然后把源对象的指针置为nullptr，最终销毁源对象
+
+#### noexcept
+不分配任何资源所以不会抛出任何异常，通知标准库而减少一些额外工作
+
+#### 移动赋值运算符
+```c++
+StrVec &StrVec::operator=(StrVec &&rhs) noexcept
+{
+    if (this != &rhs)
+    {
+        free();
+        elements = rhs.elements;
+        first_free = rhs.first_free;
+        cap = rhs.cap;
+        rhs.element = rhs.first_free = rhs.cap = nullptr;
+    }
+    return *this;
+}
+```
+#### 移后源对象必须可析构
+
+#### 合成的移动操作
+只有当一个类没有定义任何自己版本的拷贝控制函数，且它的所有数据成员都能移动构造或移动赋值时，编译器才会为它合成移动构造函数或移动赋值运算符
+
+定义了一个移动构造函数或移动赋值运算符的类必须也定义自己的拷贝操作，否则这些成员默认被定义为删除的
+
+如果没有移动构造函数，右值也被拷贝
+
+#### Message类的移动操作
