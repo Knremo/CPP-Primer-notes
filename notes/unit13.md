@@ -434,3 +434,52 @@ StrVec &StrVec::operator=(StrVec &&rhs) noexcept
 如果没有移动构造函数，右值也被拷贝
 
 #### Message类的移动操作
+```c++
+void Message::move_Folders(Message *m)
+{
+    folders = std::move(m->folders);
+    for (auto f : folders) {
+        f->remMsg(m);
+        f->addMsg(this);
+    }
+    m->folders.clear(); //确保销毁m是无害的
+}
+// 移动构造函数
+Message::Message(Message &&m): contents(std::move(m.contents))
+{
+    move_Folders(&m);
+}
+// 移动赋值运算符
+Message& Message::operator=(Message &&rhs)
+{
+    if (this != &rhs)
+    {
+        remove_from_Folders();
+        contents = std::move(rhs.contents);
+        move_Folders(&rhs);
+    }
+    return *this;
+}
+```
+
+#### 移动迭代器
+移动迭代器解引用运算符生成一个右值引用
+
+将移动迭代器传给`uninitialized_copy`
+```c++
+void StrVec::reallocate()
+{
+    auto newcapacity = size() ? 2 * size() : 1;
+    auto first = alloc.allocate(newcapacity);
+    auto last = uninitialized_copy(make_move_iterator(begin()),
+                                   make_move_iterator(end()),
+                                   first);
+    free();
+    elements = first;
+    first_free = last;
+    cap = elements + newcapacity;
+}
+```
+`uninitialized_copy`对每个元素调用`construct`来拷贝构造到目的位置，解引用一个移动迭代器得到一个右值引用，这意味着使用移动构造函数来构造元素。
+
+### 13.6.3 右值引用和成员函数
