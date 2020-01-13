@@ -483,3 +483,4 @@ void StrVec::reallocate()
 `uninitialized_copy`对每个元素调用`construct`来拷贝构造到目的位置，解引用一个移动迭代器得到一个右值引用，这意味着使用移动构造函数来构造元素。
 
 ### 13.6.3 右值引用和成员函数
+妈呀
