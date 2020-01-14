@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <vector>
 using namespace std;
 
 class String
@@ -22,7 +23,9 @@ public:
     String();
     ~String();
     String(const String&);
+    String(String&&) noexcept;
     String& operator=(const String&);
+    String& operator=(String&&) noexcept;
 
     size_t size() const { return first_free - elements; }
     size_t capacity() const { return cap - elements; }
@@ -53,12 +56,31 @@ String::String(const String& o)
     elements = newdata.first;
     first_free = cap = newdata.second;
 }
+String::String(String&& s) noexcept
+    : elements(s.elements), first_free(s.first_free), cap(s.cap)
+{
+    cout << "String(String&& s) noexcept" << endl;
+    s.elements = s.first_free = s.cap = nullptr;
+}
 String& String::operator=(const String& rhs)
 {
     auto newdata = alloc_n_copy(rhs.elements, rhs.first_free);
     free();
     elements = newdata.first;
     first_free = cap = newdata.second;
+    return *this;
+}
+String& String::operator=(String&& rhs) noexcept
+{
+    cout << "String& operator=(String&&)" << endl;
+    if (this != &rhs)
+    {
+        free();
+        elements = rhs.elements;
+        first_free = rhs.first_free;
+        cap = rhs.cap;
+        rhs.elements = rhs.first_free = rhs.cap = nullptr;
+    }
     return *this;
 }
 ostream& operator<<(ostream& o, const String& rhs)
@@ -119,5 +141,12 @@ int main()
     cout << s;
     auto s2 = s, s3(s);
     cout << endl << s2 << s3;
+
+    s = std::move(s2);
+    cout << s;
+
+    vector<String> vS;
+    vS.push_back("s1");
+    vS.push_back("s2");
     return 0;
 }

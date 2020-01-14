@@ -419,7 +419,7 @@ StrVec &StrVec::operator=(StrVec &&rhs) noexcept
         elements = rhs.elements;
         first_free = rhs.first_free;
         cap = rhs.cap;
-        rhs.element = rhs.first_free = rhs.cap = nullptr;
+        rhs.elements = rhs.first_free = rhs.cap = nullptr;
     }
     return *this;
 }
@@ -483,4 +483,104 @@ void StrVec::reallocate()
 `uninitialized_copy`对每个元素调用`construct`来拷贝构造到目的位置，解引用一个移动迭代器得到一个右值引用，这意味着使用移动构造函数来构造元素。
 
 ### 13.6.3 右值引用和成员函数
-妈呀
+成员函数也可以有两个版本
+```c++
+class StrVec
+{
+public:
+    void push_back(const std::string&);
+    void push_back(std::string&&);
+};
+void StrVec::push_back(const string& s)
+{
+    chk_n_alloc();
+    alloc.construct(first_free++, s);
+}
+void StrVec::push_back(string&& s)
+{
+    chk_n_alloc();
+    alloc.construct(first_free++, std::move(s));
+}
+
+StrVec vec;
+string s = "some string or another";
+vec.push_back(s); //push_back(const string&)
+vec.push_back("done"); //push_back(string&&)
+```
+#### 右值和左值引用成员函数
+可以在右值对象调用成员函数
+`(s1 + s2).find('a');`
+
+向一个右值赋值
+`s1 + s2 = "wow!"`
+
+阻止这种做法：
+强制左侧运算对象是一个左值，*引用限定符*
+```c++
+class Foo {
+public:
+    Foo& operator=(const Foo&) &; //只能向可修改的左值赋值
+};
+Foo& Foo::operator=(const Foo &rhs) &
+{
+    ...
+    return *this;
+}
+```
+引用限定符可以是& &&，对应左值右值，只能用于非static成员函数，定义声明都要有
+```c++
+Foo& retFoo(); //返回一个引用，retFoo调用是一个左值
+Foo retVal(); //返回一个值，retVal调用是一个右值
+Foo i, j;      //i j是左值
+i = j;         //ok
+retFoo() = j;  //ok
+retVal() = j;  //xxxxx
+i = retVal();  // ok
+```
+有const的成员函数
+```c++
+class Foo {
+public:
+Foo someMem() & const;     // xxxxxxxxx
+Foo anotherMem() const &;  //ok
+};
+```
+#### 重载和引用函数
+综合引用限定符和const来区分一个成员函数的重载版本
+```c++
+class Foo
+{
+public:
+    Foo sorted() &&; // 用于可改变的右值
+    Foo sorted() const &; // 可用于任何类型的Foo
+private:
+    vector<int> data;
+};
+//右值意味着没有别的用户，可以直接改变
+Foo Foo::sorted() &&
+{
+    sort(data.begin(), data.end());
+    return *this;
+}
+//const或是左值不能载原址上改变，先拷贝一份
+Foo Foo::sorted() const & {
+    Foo ret(*this); //拷贝一份
+    sort(ret.data.begin(), ret.data.end()); //排序副本
+    return ret; //返回副本
+}
+//编译器根据对象的左右值调用对应的sorted
+retVal().sorted(); //右值
+retFoo().sorted(); //左值
+```
+
+const成员函数可以用两个一样的版本除了const，而引用限定函数如果具有相同名字和参数列表，就必须都加上引用限定符，或者都不加
+```c++
+class Foo {
+public:
+    Foo sorted() &&;
+    Foo sorted() const; // xxxxxxx
+    using Comp = bool(const int&, const int&); //函数类型的别名。Comp*是一个函数指针
+    Foo sorted(Comp*);  // ok.不同的参数列表
+    Foo sorted(Comp*) const; //ok。都没有引用限定符
+};
+```

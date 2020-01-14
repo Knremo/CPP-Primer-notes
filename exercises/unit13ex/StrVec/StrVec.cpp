@@ -12,10 +12,13 @@ public:
     StrVec() : elements(nullptr), first_free(nullptr), cap(nullptr) {}
     StrVec(initializer_list<string>);
     StrVec(const StrVec &);
+    StrVec(StrVec &&) noexcept;
     StrVec &operator=(const StrVec &);
+    StrVec& operator=(StrVec &&) noexcept;
     ~StrVec();
 
     void push_back(const string &);
+    void push_back(string&&);
     size_t size() const { return first_free - elements; }
     size_t capacity() const { return cap - elements; }
     string *begin() const { return elements; }
@@ -52,6 +55,12 @@ void StrVec::push_back(const string &s)
     chk_n_alloc();
     alloc.construct(first_free++, s); // first_free指向第一个未构造内存，在此构造之后first_free再+1
 }
+void StrVec::push_back(string&& s)
+{
+    cout << "push_back(string&&)" << endl;
+    chk_n_alloc();
+    alloc.construct(first_free++, std::move(s));
+}
 pair<string *, string *> StrVec::alloc_n_copy(const string *b, const string *e)
 {
     auto data = alloc.allocate(e - b);
@@ -81,6 +90,13 @@ StrVec::StrVec(const StrVec &s)
     elements = newdata.first;
     first_free = cap = newdata.second;
 }
+StrVec::StrVec(StrVec &&s) noexcept
+    : elements(s.elements), first_free(s.first_free), cap(s.cap)
+{
+    cout << "StrVec(StrVec &&s);" << endl;
+    s.elements = s.first_free = s.cap = nullptr;
+    
+}
 StrVec::~StrVec()
 {
     cout << "~StrVec();" << endl;
@@ -93,6 +109,19 @@ StrVec &StrVec::operator=(const StrVec &rhs)
     free2();
     elements = data.first;
     first_free = cap = data.second;
+    return *this;
+}
+StrVec &StrVec::operator=(StrVec &&rhs) noexcept
+{
+    cout << "StrVec &operator=(StrVec&&);" << endl;
+    if (this != &rhs)
+    {
+        free();
+        elements = rhs.elements;
+        first_free = rhs.first_free;
+        cap = rhs.cap;
+        rhs.elements = rhs.first_free = rhs.cap = nullptr;
+    }
     return *this;
 }
 void StrVec::reallocate()
@@ -179,5 +208,14 @@ int main()
     sv.list();
     sv.push_back("aaa");
     sv.list();
+
+    StrVec v2 = std::move(sv); // 移动赋值初始化
+    v2.list();
+    StrVec v3(std::move(v2)); // 移动赋值初始化
+    v3.list();
+    StrVec v4;
+    v4 = std::move(v3); // 移动赋值运算符
+
+    v4.push_back("hello");
     return 0;
 }
