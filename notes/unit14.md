@@ -59,3 +59,32 @@ istream &operator>>(istream &is, Sales_data &item)
     return is;
 }
 ```
+
+## 14.3 算术和关系运算符
+非成员
+```c++
+Sales_data operator+(const Sales_data &lhs, const Sales_data &rhs)
+{
+    Sales_data sum = lhs;
+    sum += rhs; // 定义一个复合赋值运算符再来定义算术运算符
+    return sum;
+}
+```
+### 14.3.1 相等运算符
+```c++
+bool operator==(const Sales_data &lhs, const Sales_data &rhs)
+{
+    return lhs.isbn() == rhs.isbn() &&
+                  lhs.units_sold == rhs.units_sold &&
+                  lhs.revenue == rhs.revenue;
+}
+bool operator!=(const Sales_data &lhs, const Sales_data &rhs)
+{
+    return !(lhs == rhs);
+}
+```
+### 14.3.2 关系运算符
+1. 定义顺序关系，令其与关联容器中对关键字的要求一致
+2. 与==保持一致
+
+## 14.4 赋值运算符
