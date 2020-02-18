@@ -88,3 +88,118 @@ bool operator!=(const Sales_data &lhs, const Sales_data &rhs)
 2. 与==保持一致
 
 ## 14.4 赋值运算符
+拷贝赋值，移动赋值，其他
+比如
+```c++
+StrVec &operator=(std::initializer_list<std::string>);
+```
+### 复合赋值运算符
+成员
+```c++
+Sales_data& Sales_data::operator+=(const Sales_data &rhs)
+{
+    ...
+}
+```
+## 14.5 下标运算符
+必须是成员函数
+同时定义常量和非常量版本
+```c++
+std::string& operator[](std::size_t n)
+{
+    return elements[n];
+}
+const std::string& operator[](std::size_t n) const
+{
+    return elements[n];
+}
+```
+## 14.6 递增和递减运算符
+成员函数
+### 前置版本
+```c++
+class StrBlobPtr{
+public:
+    StrBlobPtr& operator++();
+    StrBlobPtr& operator--();
+};
+StrBlobPtr& StrBlobPtr::operator++()
+{
+    check(curr, "increment past end of StrBlobPtr");
+    ++curr;
+    return *this;
+}
+StrBlobPtr& StrBlobPtr::operator--()
+{
+    --curr;
+    check(curr, "decrement past begin of StrBlobPtr");
+    return *this;
+}
+```
+### 区分后置运算符
+后置版本赢爱返回对象的原值，返回的形式是一个值而非引用
+```c++
+class StrBlobPtr{
+public:
+    StrBlobPtr operator++(int); // 后置有一个额外的int参数，编译器赋值0，不会使用
+    StrBlobPtr operator--(int);
+};
+StrBlobPtr StrBlobPtr::operator++(int)
+{
+    StrBlobPtr ret = *this;
+    ++*this;
+    return ret;
+}
+StrBlobPtr StrBlobPtr::operator--(int) // 不会用到无须命名
+{
+    StrBlobPtr ret = *this;
+    --*this;
+    return ret;
+}
+```
+### 显式的调用后置运算符
+```c++
+p.operator++(0); // 后置
+p.operator++(); // 前置
+```
+## 14.7 成员访问运算符
+```c++
+class StrBlobPtr{
+public:
+    std::string& operator*() const
+    {
+        auto p = check(curr, "dereference past end");
+        return (*p)[curr];
+    }
+    std::string* operator->() const
+    {
+        return & this->operator*();
+    }
+};
+```
+## 14.8 函数调用运算符
+必须是成员函数，可以有多个版本
+```c++
+struct absInt{
+    int operator()(int val) const
+    {
+        return val < 0 ? -val : val;
+    }
+}
+
+int i = -42;
+absInt absObj;
+int ui = absObj(i);
+```
+#### 含有状态的函数对象类
+
+### 14.8.1 lambda是函数对象类
+编译器将lambda翻译成一个未命名类的未命名对象，含有一个重载的函数调用运算符
+```c++
+[](const string& a, const string& b){ return a.size() < b.size(); };
+// 类似于
+bool operator() (const string& a, const string& b) const
+{
+    return a.size() < b.size();
+}
+```
