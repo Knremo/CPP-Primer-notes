@@ -203,3 +203,29 @@ bool operator() (const string& a, const string& b) const
     return a.size() < b.size();
 }
 ```
+### 14.8.2 标准库定义的函数对象
+```c++
+#include <functional>
+
+plus<int> intAdd;
+negate<int> intNegate; // 取反
+int sum = intAdd(10, 20); // sum = 30
+sum = intNegate(intAdd(10, 20));
+
+// plus，minus, multiplies, divides, modulus, negate
+// equal_to, not_equal_to, greater, greater_equal, less, less_equal
+// logical_and, logical_or, logical_not
+```
+降序排序
+```c++
+sort(svec.begin(), svec.end(), greater<string>());
+```
+函数对象对于指针同样适用
+```c++
+vector<string *> nameTable;
+//错误：直接比较两个无关指针产生未定义行为
+sort(nameTable.begin(), nameTable.end(), [](string *a, string *b){ return a < b; });
+//正确：标准库规定指针的less定义良好
+sort(nameTable.begin(), nameTable.end(),  less<string *>());
+```
+### 14.8.3 可调用对象与function
