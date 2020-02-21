@@ -229,3 +229,69 @@ sort(nameTable.begin(), nameTable.end(), [](string *a, string *b){ return a < b;
 sort(nameTable.begin(), nameTable.end(),  less<string *>());
 ```
 ### 14.8.3 可调用对象与function
+C++可调用对象：函数，函数指针，lambda表达式，bind创建的对象，重载了函数调用运算符的类
+
+两个不同类型的可调用对象可能共享同一种*调用形式*
+```c++
+// 普通函数
+int add(int i, int j) { return i + j; }
+// lambda,未命名的函数对象类
+auto mod = [](int i, int j){ return i % j; };
+// 函数对象类
+struct divide {
+    int operator()(int denominator, int divisor) {
+        return denominator / divisor;
+    }
+};
+
+// 同一种调用形式
+int(int, int)
+```
+函数表
+```c++
+// 构建从运算符到函数指针的映射
+map<string, int(*)(int, int)> binops;
+// 可以添加add
+binops.insert({"+", add}); // {...}是一个pair
+//但是不能insert mod和divide，类型和函数指针不匹配
+
+// 使用function
+#include <functional>
+function<int(int, int)> f1 = add;
+function<int(int, int)> f2 = divide();
+function<int(int, int)> f3 = [](int i, int j){ return i * j; };
+
+// 重新定义map
+map<string, function<int(int, int)>> binops = {
+    {"+", add},
+    {"-", std::minus<int>()},
+    {"/", divide()},
+    {"*", [](int i, int j){return i * j;}},
+    {"%", mod}
+};
+// 调用
+binops["+"](10, 5);
+```
+function<T>的成员的类型
+```c++
+result_type
+argument_type
+first_argument_type
+second_argument_type
+```
+#### 重载的函数
+```c++
+int add(int i, int j) { return i + j; }
+Sales_data add(const Sales_data&, const Sales_data&);
+map<string, function<int(int,int)>> binops;
+
+binops.insert({"+", add});    //xxxxx, 不知道哪个add
+
+// 1. 存储函数指针
+int (*fp)(int, int) = add;
+binops.insert({"+", fp});
+
+// 2. lambda
+binops.insert( {"+", [](int a, int b)}{ return add(a, b); } );
+```
+## 14.9 重载，类型转换与运算符
