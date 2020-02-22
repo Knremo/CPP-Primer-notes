@@ -295,3 +295,31 @@ binops.insert({"+", fp});
 binops.insert( {"+", [](int a, int b)}{ return add(a, b); } );
 ```
 ## 14.9 重载，类型转换与运算符
+### 14.9.1 类型转换运算符
+类的一种特殊成员函数，将一个类类型的值转换为其他类型
+```c++
+class SmallInt {
+public:
+    SmallInt(int i = 0): val(i)
+    {
+        if (i < 0 || i > 255)
+            throw std::out_of_range("Bad SmallInt value");
+    }
+    operator int() const { return val; }
+private:
+    std::size_t val;
+};
+
+SmallInt si;
+si = 4; // 将4隐式转换为SmallInt，然后调用operator=
+si + 3; // 将si隐式转换为int，然后执行加法
+
+// 虽然编译器一次只能执行一个用户定义的类型转换，但是隐式的用户
+// 定义类型转换何以至于一个内置类型转换之前或之后
+SmallInt si = 3.14;
+si + 3.14;
+```
+#### bool类型转换
+比较普遍
+
+#### 
