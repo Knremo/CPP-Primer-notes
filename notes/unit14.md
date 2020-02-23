@@ -319,7 +319,29 @@ si + 3; // 将si隐式转换为int，然后执行加法
 SmallInt si = 3.14;
 si + 3.14;
 ```
-#### bool类型转换
-比较普遍
 
-#### 
+#### 显式的类型转换运算符
+```c++
+class SmallInt {
+public:
+    explicit operator int() const { return val; }
+    // ...
+};
+
+SmallInt si = 3; // ok, 构造函数不是显式的
+si + 3; // xxxxx, 
+static_cast<int>(si) + 3; //ok
+```
+显式的类型转换将被隐式的执行：
+* if, while, do的条件部分
+* for的条件表达式
+* !, ||, &&的运算对象
+* ？：条件表达式
+
+#### 转换为bool
+```c++
+while (std::cin >> value)
+```
+输入运算符将数据读入value并返回cin，cin被istream operator bool 隐式转换，如果cin状态是good，则返回真
+
+向bool的转换通常用在条件，因此定义成explicit
