@@ -345,3 +345,52 @@ while (std::cin >> value)
 输入运算符将数据读入value并返回cin，cin被istream operator bool 隐式转换，如果cin状态是good，则返回真
 
 向bool的转换通常用在条件，因此定义成explicit
+### 14.9.2 避免有二义性的类型转换
+两种方法可以把B转换为A
+```c++
+struct B;
+struct A {
+    A() = default;
+    A(const B&); // 把B转换成A
+};
+struct B {
+    operator A() const; // 把B转换成A
+};
+A f(const A&);
+B b;
+A a = f(b); // 二义性，是f(B::operator A()) 还是 f(A::A(const B&))
+
+//可以显式调用
+A a1 = f(B::operator A());
+A a2 = f(A(b));
+```
+转换目标为内置类型的多重类型转换
+```c++
+struct A {
+    A(int = 0);
+    A(double);
+    operator int() const;
+    operator double() const;
+};
+void f2(long double);
+A a;
+f2(a);  //xxxx , int() double() 都可以再转换到long double, 二义性
+
+long lg;
+A a2(lg); // long 到int   double 都一样，级别相同，二义性
+```
+### 14.9.3 函数匹配与重载运算符
+```c++
+class SmallInt {
+    friend SmallInt operator+(const SmallInt&, const SmallInt&);
+public:
+    SmallInt(int = 0);
+    operator int() const { return val; }
+private:
+    std::size_t val;
+};
+
+SmallInt s1, s2;
+SmallInt s3 = s1 + s2;  // 使用重载的operator+
+int i = s3 + 0; // 二义性，0可以转换成SmallInt然后+，或者把s3转换成int然后内置加法
+```
