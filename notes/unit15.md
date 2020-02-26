@@ -22,3 +22,76 @@ public:
 
 ## 15.2 定义基类和派生类
 ### 15.2.1 定义基类
+```c++
+class Quote {
+public:
+    Quote() = default;
+    Quote(const std::string &book, double sales_price): 
+                                        bookNo(book), price(sales_price) {}
+    std::string isbn() const { return bookNo; }
+    virtual double net_price(std::size_t n) const
+    { return n * price; }
+    virtual ~Quote() = default;
+private:
+    std::string bookNo;
+protected:
+    double price = 0.0;
+};
+```
+基类通常都应该定义一个虚析构函数
+
+任何构造函数之外的非静态函数都可以是虚函数，`virtual`只能出现在类内部的声明语句之前，该函数在派生类中隐式的也是虚函数
+
+派生类需要访问`Quote`的`price`，所以定义成`protected`，而`bookNo`通过`isbn()`调用，所以`private`
+### 15.2.2 定义派生类
+```c++
+class Bulk_quote: public Quote {
+public:
+    Bulk_quote() = default;
+    Bulk_quote(const std::string&, double, std::size_t, double);
+    double net_price(std::size_t) const override;
+private:
+    std::size_t min_qty = 0;
+    double discount = 0.0;
+};
+```
+如果一个派生是公有的，则基类的公有成员也是派生类接口的组成部分
+
+如果派生类没有覆盖其基类中的某个虚函数，会直接继承基类中的版本
+
+`override`显式注明覆盖
+
+```c++
+Quote item;
+Bulk_quote bulk;
+Quote *p = &item;
+p = &bulk;
+Quote &r = bulk;
+```
+#### 派生类构造函数
+```c++
+Bulk_quote(const std::string& book, double p, std::size_t qty, double disc):
+                        Quote(book, p), min_qty(qty), discount(disc) {  }
+```
+#### 派生类使用基类的成员
+```c++
+double Bulk_quote::net_price(size_t cnt) const
+{
+    if (cnt >= min_qty)
+        return cnt * (1 - discount) * price;
+    else
+        return cnt * price;
+}
+```
+#### 继承与静态成员
+在整个继承体系中只存在唯一定义，遵循通用的访问控制规则
+#### 派生类的声明
+```c++
+class Bulk_quote; // 没有派生列表
+```
+#### 防止继承的发生
+```c++
+class NoDerived final {};
+```
+
+### 15.2.3 类型转换与继承
