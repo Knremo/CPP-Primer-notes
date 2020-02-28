@@ -116,3 +116,28 @@ final防止覆盖的发生
 double undiscounted = baseP->Quote::net_price(42);
 ```
 ## 15.4 抽象基类
+纯虚函数，无须定义，=0
+
+含有纯虚函数的类是抽象基类，不能创建抽象基类的对象
+```c++
+class Disc_quote: public Quote {
+public:
+    Disc_quote() = default;
+    Disc_quote(const std::string& book, double price, std::size_t qty, double disc):
+        Quote(book, price), quantity(qty), discount(disc) {  }
+    double net_price(std::size_t) const = 0; // 纯虚函数
+protected:
+    std::size_t quantity = 0;
+    double discount = 0.0;
+};
+
+class Bulk_quote : Disc_quote {
+public:
+    Bulk_quote() = default;
+    Bulk_quote(const std::string& book, double price, std::size_t qty,  double disc):
+        Disc_quote(book, price, qty, disc) {}
+    double net_price(std::size_t) const override;
+};
+```
+
+## 15.5 访问控制与继承
