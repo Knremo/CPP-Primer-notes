@@ -147,3 +147,29 @@ public:
 #### 公有、私有和受保护继承
 派生访问说明符的目的是控制派生类用户（包括派生类的派生类在内）对于基类成员的访问权限
 
+#### 友元与继承
+```c++
+class Base {
+    friend class Pal;
+public:
+    void pub_mem();
+protected:
+    int prot_mem;
+private:
+    char priv_mem;
+};
+
+class Sneaky: public Base {
+    int j;
+};
+
+class Pal {
+public:
+    int f(Base b) { return b.prot_mem; }  //ok. Pal是Base的友元
+    int f2(Sneaky s) { return s.j; }  //xxxxx，Pal不是Sneaky的友元
+    int f3(Sneaky s) { return s.prot_mem; } //ok，Pal是Base的友元
+};
+```
+可访问性包括Base对象内嵌在其派生类对象中的情况
+
+#### 改变个别成员的可访问性
