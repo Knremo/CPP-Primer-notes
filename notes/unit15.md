@@ -173,3 +173,27 @@ public:
 可访问性包括Base对象内嵌在其派生类对象中的情况
 
 #### 改变个别成员的可访问性
+```c++
+class Base {
+public:
+    std::size_t size() const { return n; }
+protected:
+    std::size_t n;
+};
+class Derived : private Base {
+public:
+    using Base::size;
+protected:
+    using Base::n;
+};
+```
+私有继承而来的size和n默认是私有成员，使用using改变可访问性
+
+size是public的，所有用户都能访问，n是protected的，成员友元派生类可访问
+
+只能为派生类可访问的名字提供using声明
+
+#### 默认的继承保护级别
+class默认私有继承，struct默认公有继承
+
+## 15.6 继承中的类作用域
