@@ -214,4 +214,9 @@ public:
  bulkP->discount_policy(); //ok
  itemP->discount_policy(); // xxxxx, item的类型是Quote*, 不可见
  ```
+ #### 名字冲突与继承
+ 派生类的名字将隐藏定义在外层作用与的名字
+
+ 可以通过作用域运算符来使用一个被隐藏的基类成员
+
  
