@@ -197,28 +197,26 @@ size是public的，所有用户都能访问，n是protected的，成员友元派
 class默认私有继承，struct默认公有继承
 
 ## 15.6 继承中的类作用域
- 派生类的作用域嵌套在基类作用域之内
+派生类的作用域嵌套在基类作用域之内
 
- #### 在编译时进行名字查找
- 一个对象、引用或指针的静态类型决定了该对象的哪些成员是可见的。
- ```c++
- class Disc_quote : public Quote {
+#### 在编译时进行名字查找
+一个对象、引用或指针的静态类型决定了该对象的哪些成员是可见的。
+```c++
+class Disc_quote : public Quote {
 public:
     std::pair<size_t, double> discount_policy() const
         { return {quantity, discount}; }
- };
+};
 
- Bulk_quote bulk;
- Bulk_quote *bulkP = &bulk;
- Quote *itemP = &bulk;
- bulkP->discount_policy(); //ok
- itemP->discount_policy(); // xxxxx, item的类型是Quote*, 不可见
- ```
- #### 名字冲突与继承
- 派生类的名字将隐藏定义在外层作用与的名字
+Bulk_quote bulk;
+Bulk_quote *bulkP = &bulk;
+Quote *itemP = &bulk;
+bulkP->discount_policy(); //ok
+itemP->discount_policy(); // xxxxx, item的类型是Quote*, 不可见
+```
+#### 名字冲突与继承
+派生类的名字将隐藏定义在外层作用与的名字
 
- 可以通过作用域运算符来使用一个被隐藏的基类成员
+可以通过作用域运算符来使用一个被隐藏的基类成员
 
-upup
-asdasdasdas
- 
+派生类将在其作用域内隐藏基类成员，即使形参不一致
