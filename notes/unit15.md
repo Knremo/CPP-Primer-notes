@@ -241,3 +241,51 @@ public:
 * 如果基类的析构函数是删除或不可访问的，则派生类的移动构造函数也将是删除的
 
 #### 移动操作与继承
+基类定义虚析构函数会删除移动操作，派生类中也没有合成的移动操作
+
+如果需要，首先在基类中定义，合成版本需要显式定义
+```c++
+class Quote {
+public:
+    Quote() = default;
+    Quote(const Quote&) = default;
+    Quote(Quote&&) = default;
+    Quote& operator=(const Quote&) = default;
+    Quote& operator=(Quote&&) = default;
+    virtual ~Quote() = default;
+    //...
+};
+```
+
+### 15.7.3 派生类的拷贝控制成员
+#### 定义派生类的拷贝或移动构造函数
+通常使用对应的基类构造函数初始化对象的基类部分
+```c++
+class Base { /* ... */ };
+class D : public Base {
+public:
+    D(const D& d): Base(d) {  }
+    D(D&& d): Base(std::move(d)) {  }
+};
+```
+#### 派生类赋值运算符
+显式为其基类部分赋值
+```c++
+//Base::operator=(const Base&)
+D &D::operator=(const D &rhs)
+{
+    Base::operator=(rhs);
+    //...
+    return *this;
+}
+```
+
+#### 派生类的析构函数
+`~D();`
+
+Base的析构函数自动调用
+
+#### 在构造函数和析构函数中调用虚函数
+如果构造函数或析构函数调用了某个虚函数，则我们应该执行与构造函数或析构函数所属类型相对应的虚函数版本
+
+### 15.7.4 继承的构造函数
