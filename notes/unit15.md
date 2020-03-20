@@ -289,3 +289,41 @@ Base的析构函数自动调用
 如果构造函数或析构函数调用了某个虚函数，则我们应该执行与构造函数或析构函数所属类型相对应的虚函数版本
 
 ### 15.7.4 继承的构造函数
+只继承其直接基类的构造函数，不能继承默认、拷贝和移动构造函数
+```c++
+class Bulk_quote : public Disc_quote {
+public:
+    using Disc_quote::Disc_quote;
+    double net_price(std::size_t) const;
+};
+```
+对于基类的每个构造函数，编译器都在派生类中生成一个形参列表完全相同的构造函数
+
+相当于
+```c++
+Bulk_quote(const std::string& book, double price, std::size_t qty, double disc):
+    Disc_quote(book, price, qty, disc) {}
+```
+如果派生类含有自己的数据成员，则将被默认初始化
+
+#### 继承的构造函数的特点
+using声明不会改变该构造函数的访问级别
+
+当一个基类构造函数含有默认实参，派生类将获得多个继承的构造函数，每个分别省略一个含有默认实参的形参
+
+如果派生类的构造函数具有相同的参数列表，则不会被继承
+
+默认、拷贝和移动构造函数不会被继承
+
+## 15.8 容器与继承
+派生类对象被赋值给基类对象时，其中的派生类部分将被切掉
+
+#### 在容器中放置（智能）指针而非对象
+```c++
+vector<shared_ptr<Quote>> basket;
+
+basket.push_back(make_shared<Quote>("0-201-82470-1", 50));
+basket.push_back(make_shared<Bulk_quote>("0-201-54848-8", 50, 10, .25));
+
+cout << basket.back()->net_price(15) << endl;
+```
