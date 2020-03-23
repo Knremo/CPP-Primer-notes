@@ -330,10 +330,69 @@ cout << basket.back()->net_price(15) << endl;
 
 ### 15.8.1 编写Basket类
 ```c++
+class Quote {
+public:
+    Quote() = default;
+    Quote(const std::string &book, double sales_price): 
+                                        bookNo(book), price(sales_price) {}
+    std::string isbn() const { return bookNo; }
+    virtual double net_price(std::size_t n) const
+        { return n * price; }
+    
+    virtual Quote* clone() const & { return new Quote(*this); }
+    virtual Quote* clone() && { return new Quote(std::move(*this)); }
+
+    virtual ~Quote() = default;
+private:
+    std::string bookNo;
+protected:
+    double price = 0.0;
+};
+
+class Disc_quote: public Quote {
+public:
+    Disc_quote() = default;
+    Disc_quote(const std::string& book, double price, std::size_t qty, double disc):
+        Quote(book, price), quantity(qty), discount(disc) {  }
+    double net_price(std::size_t) const = 0; // 纯虚函数
+protected:
+    std::size_t quantity = 0;
+    double discount = 0.0;
+};
+
+class Bulk_quote : Disc_quote {
+public:
+    Bulk_quote() = default;
+    Bulk_quote(const std::string& book, double price, std::size_t qty,  double disc):
+        Disc_quote(book, price, qty, disc) {}
+    double net_price(std::size_t) const override;
+
+    Bulk_quote* clone() const & { return new Bulk_quote(*this); }
+    Bulk_quote* clone() && { return new Bulk_quote(std::move(*this)); }
+};
+double Bulk_quote::net_price(size_t cnt) const
+{
+    if (cnt >= quantity)
+        return cnt * (1 - discount) * price;
+    else
+        return cnt * price;
+}
+
+double print_total(ostream &os, const Quote &item, size_t n)
+{
+    double ret = item.net_price(n);
+    os << "ISBN: " << item.isbn() << " # sold: " << n << " total due: " << ret << endl;
+    return ret;
+}
+
 class Basket {
 public:
     void add_item(const std::shared_ptr<Quote> &sale)
         { items.insert(sale); }
+    void add_item(const Quote& sale)
+        { items.insert(std::shared_ptr<Quote>(sale.clone())); }
+    void add_item(Quote&& sale)
+        { items.insert(std::shared_ptr<Quote>(std::move(sale).clone())); }
     double total_receipt(std::ostream&) const;
 private:
     static bool compare(const std::shared_ptr<Quote> &lhs,
