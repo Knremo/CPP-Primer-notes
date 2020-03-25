@@ -71,7 +71,43 @@ private:
     std::shared_ptr<std::vector<T>> data;
     void check(size_type i, const std::string &msg) const;
 };
+template <typename T>
+void Blob<T>::check(size_type i, const std::string &msg) const
+{
+    if (i >= data->size())
+        throw std::out_of_range(msg);
+}
+template <typename T>
+T& Blob<T>::back()
+{
+    check(0, "back on empty Blob");
+    return data->back();
+}
+template <typename T>
+T& Blob<T>::operator[](size_type i)
+{
+    check(i, "subscript out of range");
+    return (*data)[i];
+}
+template <typename T>
+void Blob<T>::pop_back()
+{
+    check(0, "pop_back on empty Blob");
+    data->pop_back();
+}
+
+template <typename T>
+Blob<T>::Blob() : data(std::make_shared<std::vector<T>>()) {  }
+
+template <typename T>
+Blob<T>::Blob(std::initializer_list<T> il) : data(std::make_shared<std::vector<T>>(il)) {  }
 ```
 #### 实例化类模板
 `Blob<int> ia;`
+
+#### 类模板的成员函数
+定义在类模板之外的成员函数必须以关键字template开始
+
+#### 类模板成员函数的实例化
+一个类模板的成员函数只有当程序用到它时才进行实例化
 
