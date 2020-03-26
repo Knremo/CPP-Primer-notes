@@ -111,3 +111,23 @@ Blob<T>::Blob(std::initializer_list<T> il) : data(std::make_shared<std::vector<T
 #### 类模板成员函数的实例化
 一个类模板的成员函数只有当程序用到它时才进行实例化
 
+#### 在类模板内简化模板类名的使用
+```c++
+template <typename T>
+class BlobPtr {
+public:
+    BlobPtr() : curr(0) {}
+    BlobPtr(Blob<T> &a, size_t sz = 0): wptr(a.data), curr(sz) {}
+    T& operator*() const
+        { auto p = check(curr, "dereference past end");
+          return (*p)[curr]; }
+    BlobPtr& operator++();
+    BlobPtr& operator--(); // == BlobPtr<T>
+private:
+    std::shared_ptr<std::vector<T>> check(std::size_t, const std::string&) const;
+    std::weak_ptr<std::vector<T>> wptr;
+    std::size_t curr;
+};
+```
+在一个类模板的作用域内，直接使用模板名而不必制定模板实参
+
