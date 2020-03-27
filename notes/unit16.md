@@ -131,3 +131,42 @@ private:
 ```
 在一个类模板的作用域内，直接使用模板名而不必制定模板实参
 
+#### 类模板和友元
+一对一友好关系，对应实例及其友元的友好关系
+```c++
+template <typename> class BlobPtr;
+template <typename> class Blob;
+template <typename T>
+bool operator==(const Blob<T>&, const Blob<T>&);
+
+template <typename T> class Blob {
+    friend class BlobPtr<T>;
+    friend bool operator==<T>(const Blob<T>&, const Blob<T>&);
+    // ...
+};
+
+Blob<char> ca; // BlobPtr<char>和operator==<char>是友元
+```
+
+也可以将另一个模板的每个实例都声明为自己的友元
+```c++
+template <typename T> class Pal;
+class C {
+    friend class Pal<C>; // 用类C实例化的Pal是C的一个友元，需要前置声明
+    template <typename T> friend class Pal2; // Pal2的所有实例都是C的友元，无需前置声明
+};
+template <typename T> class C2 {
+    friend class Pal<T>; // 一对一
+    template <typename X> friend class Pal2; // Pal2的所有实例都是C2每个实例的友元，无需前置声明
+    friend class Pal3;
+};
+```
+
+令模板自己的类型参数成为友元
+```c++
+template <typename Type> class Bar {
+    friend Type;
+    // ...
+};
+```
+
