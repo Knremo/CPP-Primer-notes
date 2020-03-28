@@ -170,3 +170,25 @@ template <typename Type> class Bar {
 };
 ```
 
+#### 模板类型别名
+```c++
+template <typename T> using twin = pair<T, T>;
+twin<string> authors;
+```
+#### 类模板的static成员
+```c++
+template <typename T> class Foo {
+public:
+    static std::size_t count() { return ctr; }
+private:
+    static std::size_t ctr;
+};
+template <typename T>
+size_t Foo<T>::ctr = 0;
+
+Foo<int> fi;
+auto ct = Foo<int>::count();
+ct = fi.count();
+```
+
+### 16.1.3 模板参数
