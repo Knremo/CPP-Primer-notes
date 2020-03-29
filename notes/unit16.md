@@ -192,3 +192,36 @@ ct = fi.count();
 ```
 
 ### 16.1.3 模板参数
+#### 模板声明
+声明中的模板参数不必与定义中相同
+
+#### 使用类的类型成员
+编译器对 `T::size_type * p` ，是定义一个名为p的变量还是将一个名为size_type的static数据成员与p相乘
+
+希望通知编译器一个名字表示类型时，必须使用typename
+```c++
+template <typename T>
+typename T::value_type top(const T& c)
+{
+    if (!c.empty())
+        return c.back();
+    else
+        return typename T::value_type();
+}
+```
+
+#### 默认模板实参
+```c++
+template <typename T, typename F = less<T>>
+int compare(const T &v1, const T &v2, F f = F())
+{
+    if (f(v1, v2)) return -1;
+    if (f(v2, v1)) return 1;
+    return 0;
+}
+```
+
+#### 模板默认实参与类模板
+如果一个类模板为其所有模板参数都提供了默认实参且我们希望使用这些默认实参，就必须在模板名之后跟一个空尖括号对
+
+### 16.1.4 成员模板
