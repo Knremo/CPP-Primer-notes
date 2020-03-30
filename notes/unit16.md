@@ -225,3 +225,39 @@ int compare(const T &v1, const T &v2, F f = F())
 如果一个类模板为其所有模板参数都提供了默认实参且我们希望使用这些默认实参，就必须在模板名之后跟一个空尖括号对
 
 ### 16.1.4 成员模板
+#### 普通类的成员模板
+```c++
+class DebugDelete {
+public:
+    DebugDelete(std::ostream &s = std::cerr): os(s) {}
+    template <typename T> void operator()(T *p) const
+    {
+        os << "deleting unique_ptr" << std::endl;
+        delete p;
+    }
+private:
+    std::ostream &os;
+};
+
+double* p = new double;
+DebugDelete d;
+d(p);
+int* ip = new int;
+DebugDelete()(ip);
+
+// 重载删除器
+unique_ptr<int, DebugDelete> p(new int, DebugDelete());
+```
+#### 类模板的成员模板
+```c++
+template <typename T> class Blob {
+    template <typename It> Blob(It b, It e);
+    // ...
+};
+
+template <typename T>
+template <typename It>
+    Blob<T>::Blob(It b, It e): data(std::make_shared<std::vector<T>>(b, e)) {}
+```
+
+### 16.1.5 控制实例化
