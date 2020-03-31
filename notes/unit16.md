@@ -261,3 +261,26 @@ template <typename It>
 ```
 
 ### 16.1.5 控制实例化
+在多个文件中实例化相同的模板的额外开销可能非常严重
+
+**显式实例化**
+
+```c++
+// a.cpp
+extern template class Blob<string>;
+extern template int compare(const int&, const int&);
+//extern 不会在本文件生成实例化代码，程序在其他位置有该实例的一个非extern声明
+
+Blob<string> sa1, sa2; // 实例化在其他位置
+Blob<int> al = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}; // Blob<int> 及其接受initializer_list的构造函数在本文件中实例化
+Blob<int> a2(a1); //拷贝构造函数在本文件中实例化
+int i = compare(a1[0], a2[0]); // 实例化出现在其他位置
+
+// b.cpp
+template int compare(const int&, const int&); // 实例化在这个文件中
+template class Blob<string>;
+```
+
+实例化定义会实例化所有成员，在一个类模板的实例化定义中，所用类型必须能用于模板的所有成员函数
+
+### 16.1.6 效率与灵活性
