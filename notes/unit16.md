@@ -304,3 +304,46 @@ print(f, 10); // 将f转换为ostream&
 ```
 
 ### 16.2.2 函数模板显式实参
+#### 指定显式模板实参
+```c++
+template <typename T1, typename T2, typename T3>
+T1 sum(T2, T3);
+
+auto val3 = sum<long long>(i, lng); // T1 是显式指定的，T2 T3是从函数实参类型推断而来
+```
+显式模板实参按由左至右的顺序与对应的模板参数匹配
+
+#### 正常类型转换应用于显式指定的实参
+模板类型参数已经显式指定了的函数实参，进行正常类型转换
+```c++
+long lng;
+compare<long>(lng, 1024);  // compare(long, long)
+compare<int>(lng, 1024); // compare(int, int)
+```
+
+### 16.2.3 尾置返回类型与类型转换
+不需要用户显式指定返回类型
+```c++
+template <typename It>
+auto fcn(It beg, It end) -> decltype(*beg)
+{
+    // ...
+    return *beg;
+}
+```
+解引用运算符返回一个左值，通过 decltype 推断的类型为 beg 的类型的引用
+
+#### 进行类型转换的标准库模板类
+返回一个值的拷贝而非引用
+```c++
+#include <type_traits>
+
+template <typename It>
+auto fcn2(It beg, It end) -> typename remove_reference<decltype(*beg)>::type
+{
+    // ...
+    return *beg;
+}
+```
+
+### 16.2.4 函数指针和实参推断
