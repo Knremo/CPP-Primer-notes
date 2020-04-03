@@ -347,3 +347,16 @@ auto fcn2(It beg, It end) -> typename remove_reference<decltype(*beg)>::type
 ```
 
 ### 16.2.4 函数指针和实参推断
+```c++
+template <typename T> int compare(const T&, const T&);
+int (*pf1)(const int&, const int&) = compare;
+// pf1 中参数的类型决定了T的模板实参的类型
+
+// 无法确定时，显式指出
+void func(int(*)(const string&, const string&));
+void func(int(*)(const int&, const int&));
+
+func(compare<int>);
+```
+
+### 16.2.5 模板实参推断和引用
