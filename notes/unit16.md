@@ -360,4 +360,25 @@ func(compare<int>);
 ```
 
 ### 16.2.5 模板实参推断和引用
-haha
+#### 从左值引用函数参数推断类型
+```c++
+template <typename T>void f1(T &p);
+
+f1(i); // i int , T int
+f1(ci); // ci const int, T const int
+f1(5); // xxxx, 必须是左值
+
+// const
+template <typename T> void f2(const T&);
+
+f2(i); // i int, T int
+f2(ci); // ci const int. T int
+f2(5); // 5 右值，T int
+```
+
+#### 从右值引用函数参数推断类型
+```c++
+template <typename T> void f3(T&&);
+f3(42); // T int
+```
+#### 引用折叠和右值引用参数 
