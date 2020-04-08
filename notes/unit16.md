@@ -397,3 +397,40 @@ f3(ci); // 实参是一个左值，T推断为const int&
 #### 编写接受右值引用参数的模板函数
 
 ### 16.2.6 std::move
+#### 如何定义
+```c++
+template <typename T>
+typename remove_reference<T>::type&& move(T&& t)
+{
+    return static_cast<typename remove_reference<T>::type&&>(t);
+}
+```
+#### 如何工作
+```c++
+string s1("hi!"), s2;
+s2 = std::move(string("bye!"));
+```
+传递给move实参是string右值，当向一个右值引用函数参数传递一个右值时，由实参推断出的类型为被引用的类型，
+* T 的类型为string
+* remove_reference 用 string 进行实例化
+* remove_reference<string> 的 type 成员是 string
+* move 的返回类型是 string&&
+* t 的类型为 string&&
+
+t 的类型已经是 string&&，类型转换什么都不做
+
+```c++
+s2 = std::move(s1);
+```
+传递一个左值
+* 推断 T 的类型为 string&
+* remove_reference 用 string& 进行实例化
+* remove_reference<string&> 的 type 是 string
+* move 返回类型是 string&&
+* t 实例化为 string& &&，折叠为 string&
+
+cast 将 string& 转换为 string&&
+
+#### 从一个左值static_cast到一个右值引用是允许的
+
+### 16.2.7 转发
