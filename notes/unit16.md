@@ -434,3 +434,44 @@ cast 将 string& 转换为 string&&
 #### 从一个左值static_cast到一个右值引用是允许的
 
 ### 16.2.7 转发
+```c++
+template <typename F, typename T1, typename T2>
+void flip1(F f, T1 t1, T2 t2)
+{
+    f(t2, t1);
+}
+// 不能处理引用参数
+void f(int v1, int &v2)
+{
+    ++v2;
+}
+
+// 定义为一个指向模板类型参数的右值引用
+template <typename F, typename T1, typename T2>
+void flip2(F f, T1 &&t1, T2 &&t2)
+{
+    f(t2, t1);
+}
+void g(int &&i, int& j)
+{
+    cout << i << " " << j << endl;
+}
+// 可以接受左值引用，但不能接受右值引用
+flip2(g, i, 42) //xxxxx, 函数参数是左值表达式
+```
+#### std::forward
+```c++
+template <typename F, typename T1, typename T2>
+void flip(F f, T1 &&t1, T2 &&t2)
+{
+    f(std::forward<T2>(t2), std::forward<T1>(t1));
+}
+void g(int &&i, int& j)
+{
+    cout << i << " " << j << endl;
+}
+
+flip(g, i, 42);
+```
+
+## 16.3 重载与模板
