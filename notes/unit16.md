@@ -475,3 +475,31 @@ flip(g, i, 42);
 ```
 
 ## 16.3 重载与模板
+#### 编写重载函数
+```c++
+template <typename T> string debug_rep(const T &t)
+{
+    ostringstream ret;
+    ret << t;
+    return ret.str();
+}
+template <typename T> string debug_rep(T *p)
+{
+    ostringstream ret;
+    ret << "pointer: " << p;
+    if (p)
+        ret << " " << debug_rep(*p);
+    else
+        ret << " null pointer";
+    return ret.str();
+}
+
+string s("hi");
+cout << debug_rep(s) << endl; // 匹配第一个
+
+cout << debug_rep(&s) << endl;
+// 两个都可以生成可行实例
+// debug_rep(const string*&)  T:   string*
+// debug_rep(string*)         T:   string
+// 第一个需要进行const指针的转换，因此第二个精确匹配
+```
