@@ -508,3 +508,30 @@ cout << debug_rep(&s) << endl;
 #### 非模板和模板重载
 最特例化
 #### 重载模板和类型转换
+
+## 16.4 可变参数模板
+参数包，模板参数包，函数参数包
+```c++
+template <typename T, typename... Args>
+void foo(const T &t, const Args& ... rest);
+
+foo(i, s, 42, d);
+// void foo(const int&, const string&, const int&, const double&);
+
+cout << sizeof...(Args) << endl;
+cout << sizeof...(rest) << endl;
+```
+### 16.4.1 编写可变参数函数模板
+```c++
+template <typename T>
+ostream &print(ostream &os, const T &t)
+{
+    return os << t;
+}
+template <typename T, typename... Args>
+ostream &print(ostream &os, const T &t, const Args&... rest)
+{
+    os << t << ", ";
+    return print(os, rest...);
+}
+```
