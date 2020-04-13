@@ -535,3 +535,14 @@ ostream &print(ostream &os, const T &t, const Args&... rest)
     return print(os, rest...);
 }
 ```
+### 16.4.2 包扩展
+...
+
+### 16.4.3 转发参数包
+```c++
+template <typename... Args>
+void fun(Args&&... args)
+{
+    work(std::forward<Args>(args)...);
+}
+```
