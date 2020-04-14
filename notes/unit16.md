@@ -546,3 +546,27 @@ void fun(Args&&... args)
     work(std::forward<Args>(args)...);
 }
 ```
+
+## 16.5 模板特例化
+两个版本的compare
+```c++
+template <typename T> int compare(const T&, const T&); // 任意两个类型
+
+// 字符串字面常量
+template <size_t N, size_t M>
+int compare(const char (&)[N], const char (&)[M]);
+
+const char *p1 = "hi", *p2 = "mom";
+compare(p1, p2); // 调用第一个模板
+```
+为第一个版本定义一个模板特例化
+```c++
+template <>
+int compare(const char* const &p1, const char* const &p2)
+{
+    return strcmp(p1, p2);
+}
+```
+定义一个特例化版本，T为`const char*`，而函数要求`const T&`
+
+一个指针类型的`const`版本是一个常量指针，所以特例化版本中的类型为`const char* const &`，一个指向`const char`的`const`指针的引用
