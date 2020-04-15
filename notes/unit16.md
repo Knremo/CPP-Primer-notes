@@ -570,3 +570,57 @@ int compare(const char* const &p1, const char* const &p2)
 定义一个特例化版本，T为`const char*`，而函数要求`const T&`
 
 一个指针类型的`const`版本是一个常量指针，所以特例化版本中的类型为`const char* const &`，一个指向`const char`的`const`指针的引用
+
+#### 类模板特例化
+特例化hash类
+```c++
+namespace std {
+    template <>
+    struct hash<Sales_data>
+    {
+        typedef size_t result_type;
+        typedef Sales_data argment_type;
+        size_t operator() (const Sales_data& s) const;
+    };
+    size_t hash<Sales_data>::operator() (const Sales_data& s) const
+    {
+        return hash<string>() (s.bookNo) ^ // 异或
+               hash<unsigned>() (s.units_sold) ^
+               hash<double>() (s.revenue);
+    }
+}
+
+template <class T> class std::hash;
+class Sales_data {
+    friend class std::hash<Sales_data>;
+    // ...
+};
+```
+
+#### 类模板部分特例化
+```c++
+// 原始通用版本
+template <class T> struct remove_reference 
+{ typedef T type; };
+// 左值引用
+template <class T> struct remove_reference<T&> 
+{ typedef T type; };
+// 右值引用
+template <class T> struct remove_reference<T&&>
+{ typedef T type; };
+```
+#### 特例化成员不是类
+可以只特例化成员而不是整个模板
+```c++
+template <typename T> struct Foo {
+    Foo(const T &t = T()): mem(t) {}
+    void Bar() { /*...*/ }
+    T mem;
+    // ...
+};
+template <>
+void Foo<int>::Bar() // 特例化Foo<int>::Bar
+{
+    // ...
+}
+```
