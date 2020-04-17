@@ -12,3 +12,7 @@
 auto ptr = new std::vector<int>();
 ```
 
+**内存溢出**
+
+# 3. 栈
+函数调用，本地变量
