@@ -121,3 +121,82 @@ public:
 ```
 * `smart_ptr&&` 移动构造函数
 * `smart_ptr` ，在构造参数时直接生成新的智能指针，不再需要构造临时对象
+
+提供了移动构造函数而没有手动提供拷贝构造函数，拷贝构造函数自动被禁用，有以下结果：
+```c++
+smart_ptr<shape> ptr1{create_shape(shape_type::circle)};
+smart_ptr<shape> ptr2{ptr1};   // 编译错误
+smart_ptr<shape> ptr3;
+ptr3 = ptr1;                   // 编译错误
+ptr3 = std::move(ptr1);        // ok
+smart_ptr<shape> ptr4{std::move(ptr3)}; // ok
+```
+C++11 的 `unique_ptr` 的基本行为
+
+# 5. 子类指针向基类指针的转换
+`smart_ptr<circle>` 无法自动转换成 `smart_ptr<shape>`，增加一个构造函数：
+```c++
+template <typename U>
+smart_ptr(smart_ptr<U>&& other)
+{
+    ptr_ = other.release();
+}
+```
+该构造函数不能自动触发删除拷贝构造函数，需要标记 =delete，或同时定义标准的拷贝/移动构造函数和所需的模板构造函数
+
+可以将 `smart_ptr<circle>` 移动给 `smart_ptr<shape>`，自然
+```c++
+smart_ptr<circle> ptr1{ new circle() };
+smart_ptr<shape> ptr2{std::move(ptr1)}; // 可以将 smart_ptr<circle> 移动给 smart_ptr<shape>
+smart_ptr<circle> ptr3{ new circle() };
+smart_ptr<triangle> ptr4{std::move(ptr3)}; // 编译出错，因为 circle* 不能转换为 triangle*
+```
+
+# 5. 引用计数
+shared_ptr
+
+简化版，没考虑多线程安全：
+```c++
+class shared_count {
+public:
+    shared_count(): count_(1) {}
+    void add_count()
+    {
+        ++count_;
+    }
+    long reduce_count()
+    {
+        return --count_;
+    }
+    long get_count() const
+    {
+        return count_;
+    }
+private:
+    long count_;
+};
+```
+引用计数智能指针：
+```c++
+template <typename T>
+class smart_ptr {
+public:
+    explicit smart_ptr(T* ptr = nullptr): ptr_(ptr)
+    {
+        if (ptr) {
+            shared_count_ = new shared_count();
+        }
+    }
+    ~smart_ptr()
+    {
+        if (ptr_ && !shared_count_->reduce_count()) {
+            delete ptr_;
+            delete shared_count_;
+        }
+    }
+
+private:
+    T* ptr_;
+    shared_count* shared_count_;
+};
+```
