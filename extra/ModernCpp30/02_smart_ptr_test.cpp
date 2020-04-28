@@ -74,6 +74,15 @@ public:
             other.ptr_ = nullptr;
         }
     }
+    template <typename U>
+    smart_ptr(const smart_ptr<U>& other, T* ptr) noexcept
+    {
+        ptr_ = ptr;
+        if (ptr_) {
+            other.shared_count_->add_count();
+            shared_count_ = other.shared_count_;
+        }
+    }
     // 赋值构造函数
     // 拷贝传参时调用拷贝构造函数，计数器已经加1，直接和临时对象交换
     smart_ptr& operator=(smart_ptr rhs) noexcept
@@ -122,14 +131,44 @@ public:
     ~circle() { puts("~circle()"); }
 };
 
+template <typename T>
+void swap(smart_ptr<T>& lhs, smart_ptr<T>& rhs) noexcept
+{
+    lhs.swap(rhs);
+}
+
+template <typename T, typename U>
+smart_ptr<T> static_pointer_cast(const smart_ptr<U>& other) noexcept
+{
+    T* ptr = static_cast<T*>(other.get());
+    return smart_ptr<T>(other, ptr);
+}
+template <typename T, typename U>
+smart_ptr<T> dynamic_pointer_cast(const smart_ptr<U>& other) noexcept
+{
+    T* ptr = dynamic_cast<T*>(other.get());
+    return smart_ptr<T>(other, ptr);
+}
+template <typename T, typename U>
+smart_ptr<T> reinterpret_pointer_cast(const smart_ptr<U>& other) noexcept
+{
+    T* ptr = reinterpret_cast<T*>(other.get());
+    return smart_ptr<T>(other, ptr);
+}
+template <typename T, typename U>
+smart_ptr<T> const_pointer_cast(const smart_ptr<U>& other) noexcept
+{
+    T* ptr = const_cast<T*>(other.get());
+    return smart_ptr<T>(other, ptr);
+}
 int main()
 {
     smart_ptr<circle> ptr1{new circle()};
     printf("use count of ptr1 is %ld\n", ptr1.use_count());
     smart_ptr<shape> ptr2;
     printf("use count of ptr2 is %ld\n", ptr2.use_count());
-    ptr2 = std::move(ptr1); 
-    // ptr2 = ptr1;
+    //ptr2 = std::move(ptr1); 
+    ptr2 = ptr1;
     printf("use count of ptr2 is now %ld\n", ptr2.use_count());
     if (ptr1) {
         puts("ptr1 is not empty");
@@ -137,5 +176,8 @@ int main()
         puts("ptr1 is empty");
     }
 
+    smart_ptr<circle> ptr3 = dynamic_pointer_cast<circle>(ptr2);
+    printf("use count of ptr3 id %ld\n", ptr3.use_count());
+    
     return 0;
 }

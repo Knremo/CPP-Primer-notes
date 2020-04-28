@@ -274,9 +274,65 @@ private:
 ```
 
 # 6. 指针类型转换
+强制类型转换：
+
+## **static_cast**
+
+在编译期间完成类型转换
+
+它主要有如下几种用法：
+1. 用于类层次结构中基类和派生类之间指针或引用的转换
+    * 进行上行转换（把派生类的指针或引用转换成基类表示）是安全的
+    * 进行下行转换（把基类的指针或引用转换为派生类表示），由于没有动态类型检查，所以是不安全的
+2. 用于基本数据类型之间的转换，如short转为int, int转为double, **非const转为const类型**
+
+这种转换的安全也要开发人员来保证
 ```c++
+short sh;
+int i = static_cast<int>(sh);
+const int ci = static_cast<const int>(i);
+```
+
+1. 把空指针转换成目标类型的空指针
+2. 把任何类型的表达式转换为void类型或者反之
+
+注意：static_cast不能转换掉expression的const、volitale或者__unaligned属性。
+
+## **const_cast**
+
+常量指针(引用)被转化成非常量指针(引用)，并且仍然指向原来的对象
+```c++
+const int ci = 1;
+int *p = const_cast<int*>(&ci);
+*p = 10;
+// 我们只能通过const_cast忽略对象的属性, 却依然不能修改对象
+puts(ci); // 1 
+puts(*p); // 10 未定义
+```
+
+## **reinterpret_cast**
+
+这种转换仅仅是对二进制位的重新解释(修改), 不会借助已有的转换规则对数据进行调整, 非常简单粗暴, 风险很高, 一般我们不推荐使用
+
+reinterpret_cast用在任意指针（或引用）类型之间的转换；以及指针与足够大的整数类型之间的转换；从整数类型（包括枚举类型）到指针类型，无视大小。
+
+## **dynamic_cast**
+
+运行时处理，运行时要进行类型检查
+
+用于在类的继承层次之间进行类型转换, 它既允许向上转型, 也允许向下转型
+
+* dynamic_cast转换如果成功的话返回的是指向类的指针或引用，转换失败的话则会返回NULL
+* 使用dynamic_cast进行转换的，基类中一定要有虚函数，否则编译不通过
+* 在类的转换时，在类层次间进行上行转换时，dynamic_cast和static_cast的效果是一样的。在进行下行转换时，dynamic_cast具有类型检查的功能，比static_cast更安全
+
+
+**smart_ptr 类型转换实现**
+
+```c++
+// 添加一个构造函数
 template <typename U>
-smart_ptr(const smart_ptr<U>& other, T* ptr)
+smart_ptr(const smart_ptr<U>& other, T* ptr) noexcept
 {
     ptr_ = ptr;
     if (ptr_) {
@@ -284,12 +340,38 @@ smart_ptr(const smart_ptr<U>& other, T* ptr)
         shared_count_ = other.shared_count_;
     }
 }
-```
-```c++
+
 template <typename T, typename U>
-smart_ptr<T> dynamic_pointer_cast(const smart_ptr<U>& other)
+smart_ptr<T> static_pointer_cast(const smart_ptr<U>& other) noexcept
+{
+    T* ptr = static_cast<T*>(other.get());
+    return smart_ptr<T>(other, ptr);
+}
+template <typename T, typename U>
+smart_ptr<T> dynamic_pointer_cast(const smart_ptr<U>& other) noexcept
 {
     T* ptr = dynamic_cast<T*>(other.get());
     return smart_ptr<T>(other, ptr);
+}
+template <typename T, typename U>
+smart_ptr<T> reinterpret_pointer_cast(const smart_ptr<U>& other) noexcept
+{
+    T* ptr = reinterpret_cast<T*>(other.get());
+    return smart_ptr<T>(other, ptr);
+}
+template <typename T, typename U>
+smart_ptr<T> const_pointer_cast(const smart_ptr<U>& other) noexcept
+{
+    T* ptr = const_cast<T*>(other.get());
+    return smart_ptr<T>(other, ptr);
+}
+```
+
+最后添加一个swap
+```c++
+template <typename T>
+void swap(smart_ptr<T>& lhs, smart_ptr<T>& rhs) noexcept
+{
+    lhs.swap(rhs);
 }
 ```
