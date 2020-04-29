@@ -176,8 +176,8 @@ int main()
         puts("ptr1 is empty");
     }
 
-    smart_ptr<circle> ptr3 = dynamic_pointer_cast<circle>(ptr2);
+    smart_ptr<circle> ptr3 = static_pointer_cast<circle>(ptr2);
     printf("use count of ptr3 id %ld\n", ptr3.use_count());
-    
+
     return 0;
 }
