@@ -43,7 +43,7 @@ process_shape(circle(), triangle());
 result&& r = process_shape(circle(), triangle());
 // rusult() 的析构被延迟到main的最后
 ```
-注意：这条规则只对 prvalue 有效，xvalue无效
+注意：这条规则只对 prvalue 有效，xvalue 无效
 ```c++
 #include <utility>
 
@@ -52,4 +52,92 @@ result&& r = std::move(process_shape(circle(), triangle()));
 ```
 
 # 4. 移动的意义
+string的拼接
+
 移动语义使得在 C++ 里返回大对象（如容器）的函数和运算符成为现实
+
+# 5. 如何实现移动
+
+* 分开的拷贝构造函数和移动构造函数
+* swap 成员函数
+* 全局 swap 函数
+* 通用的 operator=
+* 上面各个函数如果不抛异常，标为 noexcept
+
+```c++
+// 拷贝构造函数，只能用于相同模板参数的对象
+smart_ptr(const smart_ptr& other)
+{
+    ptr_ = other.ptr_;
+    if (ptr_) {
+        other.shared_count_->add_count();
+        shared_count_ = other.shared_count_;
+    }
+}
+// 拷贝构造函数，同上，但是可以用于不同模板参数的对象 
+// 例如 smart_ptr<circle> ptr1; smart_ptr<shape> ptr2{ptr1};
+// 不能把 smart_ptr<circle> 转换为 smart_ptr<triangle>,因为 ptr_ = other.ptr_; 这一句，可以将
+// circle* 转为 shape*，但不能转为 triangle*
+// 定义这个功能与上面的相同，但不定义上面的非模板拷贝构造函数，编译器会合成拷贝构造函数，出错
+template <typename U>
+smart_ptr(const smart_ptr<U>& other) noexcept
+{
+    ptr_ = other.ptr_;
+    if (ptr_) {
+        other.shared_count_->add_count(); // 增加计数器
+        shared_count_ = other.shared_count_;
+    }
+}
+// 移动构造函数
+template <typename U>
+smart_ptr(smart_ptr<U>&& other) noexcept
+{
+    ptr_ = other.ptr_;
+    if (ptr_) {
+        shared_count_ = other.shared_count_;
+        other.ptr_ = nullptr;
+    }
+}
+
+// 赋值构造函数
+// 拷贝传参时调用拷贝构造函数，计数器已经加1，直接和临时对象交换
+smart_ptr& operator=(smart_ptr rhs) noexcept
+{
+    rhs.swap(*this);
+    return *this;
+}
+
+void swap(smart_ptr& rhs) noexcept
+{
+    using std::swap;
+    swap(ptr_, rhs.ptr_);
+    swap(shared_count_, rhs.shared_count_);
+}
+
+template <typename T>
+void swap(smart_ptr<T>& lhs, smart_ptr<T>& rhs) noexcept
+{
+    lhs.swap(rhs);
+}
+```
+
+# 6. 不要返回本地变量的引用
+在函数结束时本地对象即被销毁，返回一个指向本地对象的引用属于未定义行为
+
+C++11开始，返回值优化（NRVO）仍可以发生，但在没有返回值优化的情况下，编译器视图把本地对象移动出去，而不是拷贝出去
+
+用 `std::move` 反而会妨碍了返回值优化
+
+# 7. 引用坍缩和完美转发
+
+* 对于 `template <typename T> foo(T&&)` 这样的代码，如果传递过去的参数是左值，T 的推导结果是左值引用；如果传递过去的参数是右值，T 的推导结果是参数的类型
+* 如果 T 是左值引用，那 T&& 的结果仍然是左值引用
+* 如果 T 是一个实际类型，那 T&& 的结果是一个右值引用
+
+```c++
+template <typename T>
+void bar(T&& s)
+{
+    foo(std::forward<T>(s));
+}
+```
