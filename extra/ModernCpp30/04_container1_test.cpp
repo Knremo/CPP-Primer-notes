@@ -4,7 +4,7 @@ using namespace std;
 
 class O1 {
 public:
-    O1(size_t num): n(num) { cout << n << " O1()\n"; }
+    O1() { ++n; cout << n << " O1()\n"; }
     O1(const O1& other)
     {
         n = other.n;
@@ -12,12 +12,13 @@ public:
     }
     O1(O1&& other) noexcept
     {
-        n = std::move(other.n);
+        n = other.n;
         cout << n << " O1(O1&&)\n";
     }
 private:
-    size_t n;
+    static size_t n;
 };
+O1::n = 1;
 
 class O2 {
 public:
@@ -40,7 +41,9 @@ int main()
     // v1.emplace_back();
     // v1.emplace_back();
     // v1.emplace_back();
-    O1 o1(1);
+    O1 o1();
+    O1 o2();
     v1.push_back(o1);
+    v1.push_back(o2);
     return 0;
 }
