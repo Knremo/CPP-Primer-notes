@@ -29,3 +29,83 @@ struct hash<int>: public unary_function<int, size_t> {
     }
 };
 ```
+
+# 2. priority_queue
+容器适配器，顺序内部排序，less，最大的数值出现在顶部
+
+push, pop, top
+```c++
+#include <functional> // std::greater
+#include <iostream> // std::cout/endl
+#include <memory> // std::pair
+#include <queue> // std::priority_queue
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> q;
+    q.push({1,1});
+    q.push({2,2});
+    q.push({0,3});
+    q.push({9,4});
+
+    while (!q.empty()) {
+        cout << q.top() << endl;
+        q.pop();
+    }
+}
+
+/*
+(0,3)
+(1,1)
+(2,2)
+(9,4)
+*/
+```
+
+# 3. 关联容器
+set, map, multiset, multimap
+
+```c++
+set<int> s{1,1,1,2,3,4};
+
+multiset<int, greater<int>> ms{1,1,1,2,3,4};
+
+map<string, int> mp{
+    {"one", 1},
+    {"two", 2},
+    {"three", 3},
+    {"four", 4}
+};
+mp.insert({"four",4});
+mp.find("four") == mp.end()
+mp.find("five") == mp.end()
+mp["five"] = 5;
+mp.find("four")->second // 4
+mp.lower_bound("four")->second // 4 第一个不小于的元素
+(--mp.upper_bound("four"))->second // 4 第一个大于
+
+multimap<string, int> mmp{
+    {"one", 1},
+    {"two", 2},
+    {"three", 3},
+    {"four", 4}
+};
+mmp.insert({"four", -4});
+mp.lower_bound("four")->second // 4 第一个不小于的元素
+(--mp.upper_bound("four"))->second // -4 第一个大于
+
+// 区间
+#include <tuple>
+multimap<string, int>::iterator lower, upper;
+std::tie(lower, upper) = mmp.equal_range("four");
+// 检测区间非空
+(lower != upper) // true
+lower->second // 4
+upper->second // -4
+```
+关联容器默认 less 排序，对于自定义类型，重载 <
+
+严格弱序关系(strict weak ordering)
