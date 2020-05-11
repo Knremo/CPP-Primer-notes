@@ -25,7 +25,7 @@ auto ptr = new std::vector<int>();
 
 POD类型（Plain Old Data）：简单类型
 
-栈展开（stack unwinding）：发生异常是对析构函数的调用。编译器会自动调用析构函数，包括在函数执行发生异常的情况。
+栈展开（stack unwinding）：发生异常时对析构函数的调用。编译器会自动调用析构函数，包括在函数执行发生异常的情况。
 
 在C++里，所有的变量缺省都是值语义
 

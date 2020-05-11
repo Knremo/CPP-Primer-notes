@@ -108,4 +108,72 @@ upper->second // -4
 ```
 关联容器默认 less 排序，对于自定义类型，重载 <
 
-严格弱序关系(strict weak ordering)
+存储在关联容器中的健一般应满足严格弱序关系(strict weak ordering)
+
+通过比较来进行查找、插入、和删除，复杂度为对数 O(log(n)), 有没有达到更好的性能的方法？
+
+# 4. 无序关联容器
+unordered_set, unordered_map, unordered_multiset, unordered_multimap
+
+不要求提供一个排序的函数对象，而要求一个可以计算哈希值的函数对象
+
+通常使用 hash
+
+```c++
+#include <complex> // std::complex
+#include <iostream> // 
+#include <unordered_map>
+#include <unordered_set>
+#include "output_container.h"
+
+using namespace std;
+
+namespace std {
+
+template <typename T>
+struct hash<complex<T>> {
+    size_t operator()(const complex<T>& v) const noexcept
+    {
+        hash<T> h;
+        return h(v.real()) + h(v.imag());
+    }
+};
+
+} // namespace std
+
+int main()
+{
+    unordered_set<int> s{
+        1,1,2,3,5,8,13,21
+    };
+    cout << s << endl;
+    unordered_map<complex<double>, double> umc{
+        {{1.0, 1.0}, 1.4142},
+        {{3.0, 4.0}, 5.0}
+    };
+    cout << umc << endl;
+}
+```
+在 std 名空间中添加了特化，这是少数用户可以向 std 名空间添加内容的情况之一
+
+性能
+
+# 5. array
+array 保留了 C 数组在栈上分配的特点，提供 begin, end, size 等
+```c++
+#include <array>
+#include <iostream>
+#include <map>
+#include "output_container.h"
+
+typedef std::array<char, 8> mykey_t;
+
+int main()
+{
+    std::map<mykey_t, int> mp;
+    mykey_t mykey{"hello"};
+    mp[mykey] = 5; // ok
+    std::cout << mp << std::endl;
+}
+```
+可以作为键
