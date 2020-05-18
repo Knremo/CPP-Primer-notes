@@ -33,3 +33,37 @@ copy(v2.begin(), v2.end(), ostream_iterator<int>(cout, " "));
 ```
 
 # 3. 使用输入行迭代器
+把一个输入流的内容一行行读进来，用 range for
+```c++
+for (const string& line : istream_line_reader(is)) {
+    cout << line << endl;
+}
+
+// 如果用传统 for
+string line;
+for (;;) {
+    getline(is, line);
+    if (!is) {
+        break;
+    }
+    cout << line << endl;
+}
+```
+
+## 定义输入行迭代器
+C++ 里有些固定的类型要求规范，对于一个迭代器，需要定义下面的类型：
+```C++
+class istream_line_reader {
+public:
+    class iterator {
+    public:
+        typedef ptrdiff_t difference_type; // 迭代器之间距离的类型
+        typedef string value_type; // 迭代器指向的对象的值类型
+        typedef const value_type* pointer; // 迭代器指向的对象的指针类型
+        typedef const value_type& reference; // 常引用
+        typedef input_iterator_tag iterator_category; // 标识这个迭代器的类型是 input iterator
+        ...
+    };
+    ...
+};
+```
