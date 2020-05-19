@@ -62,7 +62,36 @@ public:
         typedef const value_type* pointer; // 迭代器指向的对象的指针类型
         typedef const value_type& reference; // 常引用
         typedef input_iterator_tag iterator_category; // 标识这个迭代器的类型是 input iterator
-        ...
+        
+        iterator() noexcept: stream_(nullptr) {}
+        explicit iterator(istream& is): stream_(&is) { ++*this; }
+
+        reference operator*() const noexcept
+        {
+            return line_;
+        }
+        pointer operator->() const noexcept
+        {
+            return &line_;
+        }
+        iterator& operator++()
+        {
+            getline(*stream_, line_);
+            if (!*stream_) {
+                stream_ = nullptr;
+            }
+            return *this;
+        }
+        iterator operator++(int)
+        {
+            iterator temp(*this);
+            ++*this;
+            return temp;
+        }
+
+    private:
+        istream* stream_;
+        string line_;
     };
     ...
 };
