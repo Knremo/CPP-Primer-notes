@@ -74,7 +74,7 @@ public:
         {
             return &line_;
         }
-        iterator& operator++()
+        iterator& operator++() // ++ 负责读取，只读取一次
         {
             getline(*stream_, line_);
             if (!*stream_) {
@@ -84,15 +84,36 @@ public:
         }
         iterator operator++(int)
         {
-            iterator temp(*this);
+            iterator temp(*this); // 拷贝构造函数
             ++*this;
             return temp;
+        }
+        bool operator==(const iterator& rhs) const noexcept
+        {
+            return stream_ == rhs.stream_;
+        }
+        bool operator!=(const iterator& rhs) const noexcept
+        {
+            return !operator==(rhs);
         }
 
     private:
         istream* stream_;
         string line_;
     };
-    ...
+    
+    istream_line_reader() noexcept: stream_(nullptr) {}
+    explicit istream_line_reader(istream& is) noexcept: stream_(&is) {}
+    
+    iterator begin() // 多次 begin() 会导致问题
+    {
+        return iterator(*stream_);
+    }
+    iterator end() const noexcept
+    {
+        return iterator();
+    }
+private:
+    istream* stream_;
 };
 ```
