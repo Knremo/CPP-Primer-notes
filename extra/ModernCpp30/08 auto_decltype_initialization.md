@@ -31,3 +31,23 @@ void foo(const T& c)
     using std::end;
     for (auto it = begin(c), ite = end(c); it != ite; ++it) {  }
 }
+```
+
+* `auto a = expr;` 用 expr 去匹配一个假想的 `template <typename T> f(T)`, 结果为值类型
+* `const auto& a = expr;` `template <typename T> f(const T&)`, 结果为常左值引用类型
+* `auto&& a = expr;` `template <typename T> f(T&&)`, 结果是一个跟 expr 值类别相同的引用类型
+
+# 2. decltype
+基本用法：
+* decltype(变量名)，可以获得变量的精确类型
+* decltype(表达式)，包括 ((变量名)) 可以获得表达式的引用类型; 若表达式是纯右值，结果仍然是值类型
+
+## decltype(auto)
+```c++
+decltype(expr) a = expr; // 根据表达式类型决定返回值类型
+
+// C++ 14
+decltype(auto) a = expr;
+```
+
+## 函数返回值类型推断
