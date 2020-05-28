@@ -50,4 +50,56 @@ decltype(expr) a = expr; // 根据表达式类型决定返回值类型
 decltype(auto) a = expr;
 ```
 
-## 函数返回值类型推断
+# 3. 函数返回值类型推断
+从 C++14, 函数的返回值可以用 auto 或 decltype(auto) 来声明
+
+后置返回值类型声明
+```c++
+auto foo(args) -> 返回值类型声明
+{
+    // ...
+}
+```
+
+# 4. 类模板的模板参数推导
+使用 pair
+```c++
+pair<int, int> pr{1, 42};
+auto pr = make_pair(1, 42); // 函数模板推导
+
+// C++ 17 之前的类模板没有模板参数推导
+// 之后
+pair pr{1, 42};
+// 同样
+array<int, 3> a{1, 2, 3}; // ==
+array a{1, 2, 3};
+```
+这种自动推导机制，可以是编译器根据构造函数来自动生成
+```c++
+template <typename T>
+struct MyObj {
+    MyObj(T value);
+    …
+};
+
+MyObj obj1{string("hello")};
+// 得到 MyObj<string>
+MyObj obj2{"hello"};
+// 得到 MyObj<const char*>
+```
+也可以是手工提供一个推导向导
+```c++
+
+template <typename T>
+struct MyObj {
+  MyObj(T value);
+  …
+};
+
+MyObj(const char*) -> MyObj<string>;
+
+MyObj obj{"hello"};
+// 得到 MyObj<string>
+```
+
+# 5. 结构话绑定
