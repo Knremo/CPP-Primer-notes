@@ -102,4 +102,19 @@ MyObj obj{"hello"};
 // 得到 MyObj<string>
 ```
 
-# 5. 结构话绑定
+# 5. 结构化绑定
+```c++
+// C++11/14
+multimap<string, int>::iterator lower, upper;
+std::tie(lower, upper) = mmp.equal_range("four");
+// C++17
+auto [lower, upper] = mmp.equal_range("four");
+// 可以用 auto 来获得 pair 或 tuple 返回值里的各个子项
+```
+
+# 6. 列表初始化
+```c++
+vector<int> v{1,2,3,4,5};
+```
+
+# 7. 统一初始化
