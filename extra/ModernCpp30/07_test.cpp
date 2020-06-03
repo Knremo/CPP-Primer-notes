@@ -1,13 +1,29 @@
 #include <iostream>
 
+
 template <typename T>
-void foo(const T& container)
+constexpr std::string_view type_name()
 {
-    for (T::const_iterator it = container.begin();;) {}
+    return __PRETTY_FUNCTION__;
 }
+
+#define TYPE_DISPLAY(var) static type_displayer<decltype(var)> type_display_test
+
+template <typename T>
+class type_displayer
+{
+    public:
+    type_displayer()
+    {
+        std::cout << type_name<T>() << std::endl;
+    }
+};
 
 int main()
 {
     int a = 10;
     auto&& b = a;
+    TYPE_DISPLAY(b);
+
+    return 0;
 }

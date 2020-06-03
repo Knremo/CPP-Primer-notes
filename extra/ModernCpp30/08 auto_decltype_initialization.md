@@ -118,9 +118,61 @@ vector<int> v{1,2,3,4,5};
 ```
 
 # 7. 统一初始化
+uniform initialization
+
+几乎可以在所有初始化对象的地方使用大括号，当一个构造函数不是 explicit，可以使用大括号不写类名进行构造
 ```c++
 Obj getObj()
 {
-    return {1.0};
+    return {1.0}; // 如果 Obj 类可以使用浮点数进行构造
 }
+```
+跟 `Obj(1.0)` 的主要区别是，后者可以用来调用 Obj(int), 而大括号不接受窄转换
+
+如果一个类既有使用初始化列表的构造函数，又有不使用初始化列表的构造函数，编译器会千方百计调用初始化列表的构造函数，导致意外
+
+# 8. 类数据成员的默认初始化
+```c++
+class Complex {
+public:
+    Complex() {}
+    Complex(float re): re_(re) {}
+    Complex(float re, float im): re_(re), im_(im) {}
+private:
+    float re_(0);
+    float im_(0);
+};
+```
+
+打印变量推导类型
+```c++
+template <typename T>
+constexpr std::string_view type_name()
+{
+    return __PRETTY_FUNCTION__;
+}
+
+#define TYPE_DISPLAY(var) static type_displayer<decltype(var)> type_display_test
+
+template <typename T>
+class type_displayer
+{
+    public:
+    type_displayer()
+    {
+        std::cout << type_name<T>() << std::endl;
+    }
+};
+
+int main()
+{
+    int a = 10;
+    auto&& b = a;
+    TYPE_DISPLAY(b);
+
+    return 0;
+}
+```
+```c++
+boost::typeindex::type_id_with_var<decltype(var)>().pretty_name()
 ```
