@@ -82,3 +82,11 @@ const unsigned magic = 0x44'42'47'4E;
 ```
 
 # 4. 静态断言
+C++11 直接从语言层面提供了静态断言机制，不仅能输出更好的信息，而且适用性也更好，可以直接放在类的定义中:
+```c++
+static_assert(编译期条件表达式，可选输出信息);
+// e.g.
+static_assert((allgnment & (alignment -1)) == 0, "Alignment must be power of two");
+```
+
+# 5. default 和 delete 成员函数
