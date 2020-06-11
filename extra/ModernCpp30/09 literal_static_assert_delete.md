@@ -90,3 +90,47 @@ static_assert((allgnment & (alignment -1)) == 0, "Alignment must be power of two
 ```
 
 # 5. default 和 delete 成员函数
+关于构造函数等的复杂规则...
+
+```c++
+class my_array {
+public:
+    my_array() = default; // 默认构造函数
+};
+
+class shape_wrapper {
+    ...
+    shape_wrapper(const shape_wrapper&) = delete;
+    shape_wrapper& operator=(const shape_wrapper&) = delete;
+    ...
+};
+```
+
+# 6. override 和 final 说明符
+override 显式声明了成员函数是一个虚函数且覆盖了基类中的该函数
+
+final 声明了成员函数是一个虚函数，且该虚函数不可在派生类中被覆盖; 标志某个类或结构不可被派生
+
+```c++
+class A {
+public:
+    virtual void foo();
+    virtual void bar();
+    void foobar();
+};
+
+class B : public A {
+public:
+    void foo() override;
+    void bar() override final;
+};
+
+class C final : public B {
+public:
+    void foo() override; // ok
+    // void bar() override; // xxx
+};
+
+class D : public C {}; // xxxx
+```
+
