@@ -56,3 +56,45 @@ public:
     matrix& operator=(matrix&&);
 };
 ```
+## 没有返回值优化
+返回非引用类型的表达式结果是个纯右值（prvalue）
+
+在执行`auto r = …`的时候，编译器会认为我们实际是在构造`matrix r(…)`，而“…”部分是一个纯右值。
+因此编译器会首先试图匹配 `matrix(matrix&&)`，在没有时则试图匹配 `matrix(const matrix&)`；也就是说，有移动支持时使用移动，没有移动支持时则拷贝。
+
+## 返回值优化
+```c++
+#include <iostream>
+
+using namespace std;
+
+// Can copy and move
+class A {
+public:
+  A() { cout << "Create A\n"; }
+  ~A() { cout << "Destroy A\n"; }
+  A(const A&) { cout << "Copy A\n"; }
+  A(A&&) { cout << "Move A\n"; }
+};
+
+A getA_unnamed()
+{
+  return A();
+}
+
+int main()
+{
+  auto a = getA_unnamed();
+}
+```
+结果是
+```
+Create A
+Destroy A
+```
+既没有移动构造也没有拷贝构造
+
+## 删除拷贝和移动构造函数
+C++14 之前出错
+
+但从 C++17 开始，对于 `getA_unnamed()` 这种情况，即使对象不可拷贝，不可移动，仍是可以被返回的。对象必须被直接构造在目标位置，不经过拷贝或移动的步骤
