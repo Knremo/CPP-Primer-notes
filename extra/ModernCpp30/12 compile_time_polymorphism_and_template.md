@@ -83,3 +83,65 @@ cln::cl_I my_mod<cln::cl_I>(const cln::cl_I& lhs, const cln::cl_I& rhs)
 一般而言，特化是一种更通用的技巧，最主要的原因是特化可以用在类模板和函数模板上，而重载只能用于函数
 
 对函数使用重载，对类模板进行特化
+
+使用特化技巧大致实现 static_assert 的功能：
+```c++
+template <bool>
+struct complie_time_error;
+template <>
+struct compile_time_error<true> {};
+
+#define STATIC_ASSERT(Expr, Msg) \
+  { \
+    compile_time_error<bool(Expr)> ERROR_##_Msg; \
+    (void)ERROR_##_Msg;\
+  }
+
+// 在宏里 ## 表示连接两个子串
+```
+上面首先声明了一个 struct 模板，然后仅对 true 的情况进行了特化，产生了一个 struct 的定义。这样。如果遇到 `compile_time_error<false>` 的情况——也就是下面静态断言里的 Expr 不为真的情况——编译就会失败报错，因为 `compile_time_error<false>` 从来就没有被定义过
+
+# 3. 动态多态和静态多态的对比
+动态”多态解决的是运行时的行为变化，选择了一个形状之后，再选择在某个地方绘制这个形状——这个是无法在编译时确定的
+
+“静态”多态或者“泛型”，解决的是很不同的问题，让适用于不同类型的“同构”算法可以用同一套代码来实现，实际上强调的是对代码的复用
+
+## sort 算法
+C++ 里的标准 sort 算法（以两参数的重载为例）只要求：
+* 参数满足随机访问迭代器的要求
+* 迭代器指向的对象之间可以使用 < 来比较大小，满足严格弱序关系
+* 迭代器指向的对象可以被移动
+
+## 其他
+```c++
+reverse：反转
+count：计数
+find：查找
+max：最大值
+min：最小值
+minmax：最小值和最大值
+next_permutation：下一个排列
+gcd：最大公约数
+lcm：最小公倍数
+etc.
+```
+
+# 4. 补充
+```c++
+template <class T>  //(a)
+void f(T)；
+
+template <> // 显式特化，这一次是（a）的特化
+void f<>(int *);
+
+template <class T> // (b)第二个基本模板，重载(a)
+void f(T*);
+
+int* p;
+f(p);
+```
+针对 `int*` 的全特化在(a)的后面，就是属于(a)的基础模板的全特化，在(b)后面就是(b)的全特化
+
+所以对函数用重载就行了
+
+`#include <typeinfo>`
