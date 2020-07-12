@@ -126,3 +126,104 @@ integral_constant<int, 55>::value -> 55
 ```
 
 # 2. 编译期类型推导
+C++ 标准库在 `<type_traits>` 头文件里定义了很多工具类模板，用来提取某个类型（type）在某方面的特点（trait）
+
+integral_constant 就是其中之一
+
+针对布尔值
+```c++
+typedef std::integral_constant<bool, true> true_type;
+typedef std::integral_constant<bool, false> false_type;
+```
+
+一个工具函数
+```c++
+template <typename T>
+class SomeContainer {
+public:
+    ...
+    static void destory(T* ptr)
+    {
+        _destory(ptr, is_trivially_destructible<T>());
+    }
+private:
+    static void _destory(T* ptr, true_type) {}
+    static void _destory(T* ptr, fasle_type)
+    {
+        ptr->~T();
+    }
+};
+```
+很多容器类里会有一个 `destroy` 函数，通过指针来析构某个对象
+
+为了确保最大程度的优化，常用的一个技巧就是用 `is_trivially_destructible` 模板来判断类是否是可平凡析构的——也就是说，不调用析构函数，不会造成任何资源泄漏问题
+
+模板返回的结果还是一个类，要么是 `true_type`，要么是 `false_type`
+
+如果要得到布尔值的话，使用 `is_trivially_destructible<T>::value` 
+
+## trait class
+* is_array
+* is_enum
+* is_function
+* is_pointer
+* is_reference
+* is_const
+* has_virtual_destructor
+* ...
+
+## remove_const
+```c++
+template <class T>
+struct remove_const {
+    typedef T type;
+};
+template <class T>
+struct remove_const<const T> {
+    typedef T type;
+};
+
+remove_const<const string&>::type == string&
+```
+如果对 `const char*` 应用 `remove_const` 的话，结果还是 `const char*`。原因是，`const char*` 是指向 `const char` 的指针，而不是指向 `char` 的 `const` 指针。如果我们对 `char * const` 应用 `remove_const` 的话，还是可以得到 `char*` 的。
+
+## 简易写法
+```c++
+template <class T>
+inline constexpr bool is_trivially_destructible_v =is_trivially_destructible<T>::value;
+
+
+template <class T>
+using remove_const_t = typename remove_const<T>::type;
+```
+
+## fmap
+```c++
+template <
+    template <typename, typename>
+    class OutContainer = vector,
+    typename F, class R
+    >
+auto fmap(F&& f, R&& inputs)
+{
+    typedef decay_t<decltype(f(*inputs.begin()))> result_type;
+    OutContainer<result_type, allocator<result_type>> result;
+    for (auto&& item:inputs) {
+        result.push_back(f(item));
+    }
+    return result;
+}
+
+vector<int> v{1,2,3,4,5};
+int add_1(int x)
+{
+    return x + 1;
+}
+auto result = fmap(add_1, v);
+// {2,3,4,5,6}
+```
+* 用 decltype 来获得用 f 来调用 inputs 元素的类型（参考第 8 讲）；
+* 用 decay_t 来把获得的类型变成一个普通的值类型；
+* 缺省使用 vector 作为返回值的容器，但可以通过模板参数改为其他容器；
+* 使用基于范围的 for 循环来遍历 inputs，对其类型不作其他要求（参考第 7 讲）；
+* 存放结果的容器需要支持 push_back 成员函数（参考第 4 讲）。
