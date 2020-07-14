@@ -33,6 +33,7 @@ int main()
 ```
 output:
 > 1
+> 
 > 2
 
 分析 `f<Test>(10);`：
@@ -81,3 +82,43 @@ public:
 
 # 3. SFINAE 模板技巧
 ## enable_if
+```c++
+template <typename C, typename T>
+enable_if_t<has_reserve<C>::value, void> append(C& container, T* ptr, size_t size)
+{
+    container.reserve(container.size() + size);
+    for (size_t i = 0; i < size; ++i) {
+        container.push_back(ptr[i]);
+    }
+}
+
+template <typename C, typename T>
+enable_if_t<!has_reserve<C>::value, void> append(C& container, T* ptr, size_t size)
+{
+    for (size_t i = 0; i < size; ++i) {
+        container.push_back(ptr[i]);
+    }
+}
+```
+`enable_if_t<has_reserve<C>::value, void>` 的意思可以理解成：如果类型 C 有 reserve 成员的话，那我们启用下面的成员函数，它的返回类型为 void
+
+## decltype 返回值
+对于上面的 `append` 的情况，如果我们想限制只有具有 reserve 成员函数的类可以使用这个重载，我们可以把代码简化成：
+```c++
+template <typename C, typename T>
+auto append(C& container, T* ptr, size_t size) 
+    -> decltype(declval<C&>().reserve(1U), void())
+{
+    container.reserve(container.size() + size);  
+    for (size_t i = 0; i < size; ++i) {
+        container.push_back(ptr[i]);
+    }
+}
+```
+* `declval` 模板用来声明一个某个类型的参数，但这个参数只是用来参加模板的匹配，不允许实际使用。使用这个模板，我们可以在某类型没有默认构造函数的情况下，假想出一个该类的对象来进行类型推导 `declval<C&>()`
+
+* `declval<C&>().reserve(1U)` 用来测试 `C&` 类型的对象是不是可以拿 `1U` 作为参数来调用 `reserve` 成员函数, 没有编译就报错
+
+* C++ 里的逗号表达式的意思是按顺序逐个估值，并返回最后一项。所以，上面这个函数的返回值类型是 `decltype(..., void())` == `void`
+
+## void_t
