@@ -122,3 +122,79 @@ auto append(C& container, T* ptr, size_t size)
 * C++ 里的逗号表达式的意思是按顺序逐个估值，并返回最后一项。所以，上面这个函数的返回值类型是 `decltype(..., void())` == `void`
 
 ## void_t
+C++17
+```c++
+template <typename...>
+using void_t = void;
+```
+这个类型模板会把任意类型映射到 void。它的特殊性在于，在这个看似无聊的过程中，编译器会检查那个“任意类型”的有效性。利用 decltype、declval 和模板特化，我们可以把 has_reserve 的定义大大简化：
+```c++
+typedef std::integral_constant<bool, true> true_type;
+typedef std::integral_constant<bool, false> false_type;
+
+template <typename T, typename = void_t<>>
+struct has_reserve : false_type {};
+
+template <typename T>
+struct has_reserve<T, void_t<decltype(declval<T&>().reserve(1U))>> : true_type {};
+
+cout << has_reserve(MyContainer)::value;
+```
+第二个 `has_reserve` 模板的定义实际上是一个偏特化。偏特化是类模板的特有功能，跟函数重载有些相似。编译器会找出所有的可用模板，然后选择其中最“特别”的一个
+
+`has_reserve(MyContainer)` 满足第一个模板，也满足第二个，但第二个更特别，编译器会选择第二个特化的模板
+
+只有第二个模板不能被满足时，才会回到第一个模板的通用情况
+
+## 标签分发
+用 `true_type` 和 `false_type` 来选择合适的重载。这种技巧有个专门的名字，叫标签分发（tag dispatch）。我们的 append 也可以用标签分发来实现：
+```c++
+template <typename C, typename T>
+void _append(C& container, T* ptr, size_t size, true_type)
+{
+    container.reserve(container.size() + size);
+    for (size_t i = 0; i < size; ++i) {
+        container.push_back(ptr[i]);
+    }
+}
+
+template <typename C, typename T>
+void _append(C& container, T* ptr, size_t size, false_type)
+{
+    for (size_t i = 0; i < size; ++i) {
+        container.push_back(ptr[i]);
+    }    
+}
+
+template <typename C, typename T>
+void append(C& container, T* ptr, size_t size)
+{
+    _append(container, ptr, size, integral_constant<bool, has_reserve<C>::value>{});
+}
+```
+这个代码跟使用 `enable_if` 是等价的
+
+用 `void_t` 的 `has_reserve` 版本简化：
+```c++
+template <typename C, typename T>
+void append(C& container, T* ptr, size_t size)
+{
+    _append(container, ptr, size, has_reserve<C>{});
+}
+```
+
+# 4. 静态多态的限制
+像在 Python 之类的语言里一样，直接写下面这样的代码：
+```c++
+template <typename C, typename T>
+void append(C& container, T* ptr, size_t size)
+{
+    if (has_reserve<C>::value) {
+        container.reserve(container.size() + size);
+    }
+    for (size_t i = 0; i < size; ++i) {
+        container.push_back(ptr[i]);
+    }
+}
+```
+在 C 类型没有 reserve 成员函数的情况下，编译是不能通过的，会报错。这是因为 C++ 是静态类型的语言，所有的函数、名字必须在编译时被成功解析、确定

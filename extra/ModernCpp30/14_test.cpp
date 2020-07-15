@@ -24,6 +24,15 @@ public:
     void reserve(size_t n) {  }
 };
 
+typedef std::integral_constant<bool, true> true_type;
+typedef std::integral_constant<bool, false> false_type;
+
+template <typename T, typename = std::void_t<>>
+struct has_reserve2 : false_type {};
+
+template <typename T>
+struct has_reserve2<T, std::void_t<decltype(std::declval<T&>().reserve(1U))>> : true_type {};
+
 int main()
 {
     auto r = has_reserve<MyContainer>::value;
@@ -32,4 +41,7 @@ int main()
     MyContainer mc;
     int Myarray[3] = {1,2,3};
     append(mc, Myarray, 2);
+
+    auto r2 = has_reserve2<MyContainer>::value;
+    if (r) std::cout << 2;
 }
