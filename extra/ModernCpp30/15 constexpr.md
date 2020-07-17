@@ -46,3 +46,112 @@ if (n < 0) {
 ```
 
 # 3. constexpr 和 const
+本质上，const 用来表示一个**运行时常量**
+
+从编译器的角度，为了向后兼容性，const 和 constexpr 在很多情况下还是等价的。但有时候，它们也有些细微的区别，其中之一为是否**内联**的问题
+
+## 内联变量
+C++17 引入了内联（inline）变量的概念，允许在头文件中定义内联变量，然后像内联函数一样，只要所有的定义都相同，那变量的定义出现多次也没有关系
+
+对于**类的静态数据成员**，const 缺省是不内联的，而 constexpr 缺省就是内联的
+
+```c++
+#include <iostream>
+#include <vector>
+
+struct magic {
+  static const int number = 42;
+};
+
+int main()
+{
+  std::cout << magic::number << std::endl; // ok
+  
+  std::vector<int> v;
+  // 调用 push_back(const T&) ODR-use
+  v.push_back(magic::number); // 报错
+  std::cout << v[0] << std::endl;
+}
+```
+这是因为 ODR-use 的类静态常量也需要有一个定义，在没有内联变量之前需要在某一个源代码文件（非头文件）中这样写：
+```c++
+const int magic::number = 42;
+```
+修正这个问题的简单方法是把 magic 里的 `static const` 改成 `static constexpr` 或 `static inline const`
+
+## constexpr 变量模板
+变量模板是 C++14 引入的新概念
+
+```c++
+template <class T>
+inline constexpr bool is_trivially_destructible_v =
+    is_trivially_destructible<T>::value;
+```
+
+## constexpr 变量仍是 const
+```c++
+constexpr int a = 42;
+constexpr const int& b = a;
+```
+第二行里，constexpr 表示 b 是一个编译期常量，const 表示这个引用是常量引用
+
+# 4. constexpr 构造函数和字面类型
+一个合理的 constexpr 函数，应当至少对于某一组编译期常量的输入，能得到编译期常量的结果。为此，对这个函数也是有些限制的：
+* 最早，constexpr 函数里连循环都不能有，但在 C++14 放开了。
+* 目前，constexpr 函数仍不能有 try … catch 语句和 asm 声明，但到 C++20 会放开。
+* constexpr 函数里不能使用 goto 语句。
+* 等等。
+
+如果一个类的构造函数里面只包含常量表达式、满足对 constexpr 函数的限制的话（这也意味着，里面不可以有任何动态内存分配），并且类的析构函数是平凡的，那这个类就可以被称为是一个**字面类型**
+
+为了全面支持编译期计算，C++14 开始，很多标准类的构造函数和成员函数已经被标为 constexpr，以便在编译期使用
+
+面这些不使用动态内存分配的字面类型则可以在常量表达式中使用：
+* array
+* initializer_list
+* pair
+* tuple
+* string_view
+* optional
+* variant
+* bitset
+* complex
+* chrono::duration
+* chrono::time_point
+* shared_ptr(仅限默认构造和空指针构造)
+* unique_ptr(仅限默认构造和空指针构造)
+
+```c++
+#include <array>
+#include <iostream>
+#include <memory>
+#include <string_view>
+
+using namespace std;
+
+int main()
+{
+    constexpr string_view sv{"hi"};
+    constexpr pair pr{sv[0], sv[1]};
+    constexpr array a{pr.first, pr.second};
+    constexpr int n1 = a[0];
+    constexpr int n2 = a[1];
+    cout << n1 << ' ' << n2 << '\n';
+}
+```
+
+## if constexpr
+```c++
+template <typename C, typename T>
+void append(C& container, T* ptr, size_t size)
+{
+  if constexpr (has_reserve<C>::value) {
+    container.reserve(container.size() + size);
+  }
+  for (size_t i = 0; i < size; ++i) {
+    container.push_back(ptr[i]);
+  }
+}
+```
+
+# 5. output_container.h 解读
