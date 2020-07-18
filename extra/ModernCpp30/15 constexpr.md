@@ -81,7 +81,6 @@ const int magic::number = 42;
 
 ## constexpr 变量模板
 变量模板是 C++14 引入的新概念
-
 ```c++
 template <class T>
 inline constexpr bool is_trivially_destructible_v =
@@ -89,6 +88,7 @@ inline constexpr bool is_trivially_destructible_v =
 ```
 
 ## constexpr 变量仍是 const
+!!!!编译失败
 ```c++
 constexpr int a = 42;
 constexpr const int& b = a;
@@ -141,6 +141,7 @@ int main()
 ```
 
 ## if constexpr
+C++17
 ```c++
 template <typename C, typename T>
 void append(C& container, T* ptr, size_t size)
@@ -155,3 +156,113 @@ void append(C& container, T* ptr, size_t size)
 ```
 
 # 5. output_container.h 解读
+```c++
+// Type trait to detect std::pair
+template <typename T>
+struct is_pair : std::false_type {};
+template <typename T, typename U>
+struct is_pair<std::pair<T, U>> : std::true_type {}; // 特化
+template <typename T>
+inline constexpr bool is_pair_v = is_pair<T>::value;
+```
+```c++
+// Type trait to detect whether an
+// output function already exists
+template <typename T>
+struct has_output_function {
+    template <class U>
+    static auto output(U* ptr) -> decltype(
+        std::declval<std::ostream&>() << *ptr, // ptr是nullptr，但是可以做<<的测试,不能实际使用
+        std::true_type());
+    template <class U>
+    static std::false_type output(...);
+    static constexpr bool value = decltype(output<T>(nullptr))::value;
+};
+template <typename T>
+inline constexpr bool has_output_function_v =
+    has_output_function<T>::value;
+```
+这段代码使用 SFINAE 技巧，来检测模板参数 T 的对象是否已经可以直接输出到 ostream。然后，一样用一个内联 constexpr 变量来简化表达。
+
+```c++
+// Element output function for containers that define a key_type
+// and have its value type as std::pair
+template <typename T, typename Cont>
+auto output_element(std::ostream& os, 
+                    const T& element, 
+                    const Cont&, 
+                    const std::true_type)
+    -> decltype(std::declval<typename Cont::key_type>(), os)
+{
+    os << element.first << " => " << element.second;
+    return os;
+}
+// Element output function for other containers
+template <typename T, typename Cont>
+auto output_element(std::ostream& os,
+                    const T& element, 
+                    const Cont&,
+                    ...) -> decltype(os)
+{
+    os << element;
+    return os;
+}
+```
+对于容器成员的输出，我们也声明了两个不同的重载。我们的意图是，如果元素的类型是 pair 并且容器定义了一个 `key_type` 类型，我们就认为遇到了关联容器，输出形式为“x => y”（而不是“(x, y)”）
+
+```c++
+// Main output function, enabled only if no output function already exists
+template <typename T,
+          typename = std::enable_if_t<!has_output_function_v<T>>>
+auto operator<<(std::ostream& os, const T& container)
+    -> decltype(container.begin(), container.end(), os)
+{
+    using std::decay_t;
+    using std::is_same_v;
+
+    using element_type = decay_t<decltype(*container.begin())>;
+    constexpr bool is_char_v = is_same_v<element_type, char>;
+    if constexpr (!is_char_v) {
+        os << '{';
+    }
+    auto end = container.end();
+    bool on_first_element = true;
+    for (auto it = container.begin(); it != end; ++it) {
+        if constexpr (is_char_v) {
+            if (*it == '\0') {
+                break;
+            }
+        } else {
+            if (!on_first_element) {
+                os << ", ";
+            } else {
+                os << ' ';
+                on_first_element = false;
+            }
+        }
+        output_element(os, *it, container, is_pair<element_type>()); // 标签分发
+    }
+    if constexpr (!is_char_v) {
+        if (!on_first_element) {  // Not empty
+            os << ' ';
+        }
+        os << '}';
+    }
+    return os;
+}
+```
+* 对于类型 T ，如果有输出函数，则 `!has_output_function_v<T>` 为假，`enable_if_t` 就未定义，模板匹配出错，就忽略下面的重载函数
+* 其次，类型 T 必须有 `begin()`  和 `end()` 成员函数
+* 如果是 char 元素，则直接一个个输出
+* 其他的则是 { ., ., . }
+
+```c++
+// Output function for std::pair
+template <typename T, typename U>
+std::ostream& operator<<(std::ostream& os, const std::pair<T, U>& pr)
+{
+    os << '(' << pr.first << ", " << pr.second << ')';
+    return os;
+}
+```
+针对 pair 的重载，pair 就是 (x,y)
