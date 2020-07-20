@@ -158,4 +158,35 @@ int main()
 auto sum = [](auto x, auto y) { return x + y; };
 ```
 
-# bind 模板
+# 5. bind 模板
+```c++
+using namespace std::placeholders;
+
+transform(v.begin(), v.end(), v.begin(), bind(plus<>(), _1, 2));
+```
+
+# 6. function 模板
+function 模板的参数就是函数的类型，一个函数对象放到 function 里之后，外界可以观察到的就只剩下它的参数、返回值类型和执行效果
+
+```c++
+map<string, function<int(int, int)>> op_dict{
+  {"+",
+   [](int x, int y) {
+     return x+y;
+   }},
+   {"-",
+   [](int x, int y) {
+     return x-y;
+   }},
+   {"*",
+   [](int x, int y) {
+     return x*y;
+   }},
+   {"/",
+   [](int x, int y) {
+     return x/y;
+   }},
+};
+
+op_dict.at("+")(1, 6);
+```
