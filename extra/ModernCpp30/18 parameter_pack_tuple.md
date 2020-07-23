@@ -28,3 +28,57 @@ inline unique_ptr<vector<int>> make_unique(int&& arg1, int&& arg2)
 ```
 ## 递归用法
 用可变模板来实现编译期递归
+```c++
+template <typename T>
+constexpr auto sum(T x)
+{
+    return x;
+}
+
+template <typename T1, typename T2, typename... Targ>
+constexpr auto sum(T1 x, T2 y, Targ... args)
+{
+    return sum(x+y, args...);
+}
+
+auto result = sum(1,2,3,4,5);
+```
+只有一个参数，会走到上面的重载，下面的重载每次会递归调用，每次少一个参数
+
+复合函数：
+```c++
+template <typename F>
+auto compose(F f)
+{
+    return [f](auto&&... x) {
+        return f(forward<decltype(x)>(x)...);
+    };
+}
+template <typename F, typename... Args>
+auto compose(F f, Args... other)
+{
+    return [f, other...](auto&&... x) {
+        return f(compose(other...)(forward<decltype(x)>(x)...));
+    };
+}
+```
+先平方在求和
+```c++
+auto square_list = [](auto&& container) {
+    return fmap([](int x) { return x*x; }, 
+                container);
+};
+auto sum_list = [](auto&& container) {
+    return accumulate(container.begin(), container.end(), 0);
+};
+
+auto squared_sum = compose(sum_list, square_list);
+
+vector v{1, 2, 3, 4, 5};
+cout << squared_sum(v) << endl;
+```
+分析：
+```c++
+compose(sum_list, square_list)(v) -> 第二个 compose
+[sum_list, square_list](auto&& v) {return sum_list(compose(square_list)(forward<decltype(v)>(v)));}; ->
+```
