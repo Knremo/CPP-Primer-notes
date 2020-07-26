@@ -189,3 +189,33 @@ f(get<0，1，2>(forward<tuple<int,string,string>>(t))) // xxxx
 ```
 
 # 3. 数值预算
+计算单个数值：
+```c++
+constexpr int count_bits(unsigned int value)
+{
+    if (value == 0) {
+        return 0;
+    } else {
+        return (value & 1) + count_bits(value >> 1);
+    }
+}
+```
+256 个：
+```c++
+template <size_t... V>
+struct bit_count_t {
+    unsigned char count[sizeof...(V)] = {
+        static_cast<unsigned char>(count_bits(V))...
+    };
+};
+
+template <size_t... V>
+bit_count_t<V...> get_bit_count(index_sequence<V...>)
+{
+    return bit_count_t<V...>();
+}
+
+auto bit_count = get_bit_count(make_index_sequence<256>());
+```
+因为 `bit_count_t` 必须要 `<size_t... V>` ，所以用 `get_bit_count` 中转一下
+
