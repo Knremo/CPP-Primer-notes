@@ -57,3 +57,64 @@ void recoup(int) noexcept(true); // 不会抛出异常
 一个虚函数承诺不抛异常，则派生的虚函数必须同样
 
 ## 18.1.5 异常类层次
+```
+exception
+    bad_cast
+    bad_alloc
+    runtime_error
+        overflow_error
+        underflow_error
+        range_error
+    logic_error
+        domain_error
+        invalid_argument
+        out_of_range
+        length_error
+```
+**自定义异常类**
+```c++
+class out_of_stock: public std::runtime_error {
+public:
+    explicit out_of_stock(const std::string &s):
+        std::runtime_error(s) {}
+};
+class isbn_mismatch: public std::logic_error {
+public:
+    explicit isbn_mismatch(const std::string &s):
+        std::logic_error(s) {}
+    isbn_mismatch(const std::string &s, const std::string &lhs, const std::string &rhs):
+        std::logic_error(s), left(lhs), right(rhs) {}
+    const std::string left, right;
+};
+
+Sales_data::operator+=(const Sales_data& rhs)
+{
+    if (isbn() != rhs.isbn())
+        throw isbn_mismatch("wrong isbns", isbn(), rhs.isbn());
+    ...
+}
+```
+# 18.2 命名空间
+命名空间可以是不连续的
+
+外部定义
+
+模板特例化在命名空间声明后可以外部定义
+
+全局命名空间 ::member
+
+嵌套的命名空间
+
+内联命名空间
+
+未命名的命名空间
+
+## 18.2.2 使用命名空间成员
+命名空间别名 `namespace primer = cplusplus_primer`
+
+写 `std::move`
+
+## 18.2.4 重载与命名空间
+using
+
+# 18.3 多重继承与虚继承
