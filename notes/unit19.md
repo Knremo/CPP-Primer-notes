@@ -207,3 +207,132 @@ const string Screen::*pdata = Screen::data();
 
 auto s = myScreen.*pdata;
 ```
+## 19.4.2 成员函数指针
+```cpp
+class Screen {
+public:
+    typedef std::string::size_type pos;
+    char get_cursor() const { return contents[cursor]; }
+    char get() const;
+    char get(pos ht, pos wd) const;
+    // ...
+};
+
+auto pmf = &Screen::get_cursor;
+// 重载
+char (Screen::*pmf2)(Screen::pos, Screen::pos) const;
+pmf2 = &Screen::get; // 和普通函数指针不同，成员函数和指针不存在自动转换
+
+// 使用
+Screen myScreen, *pScreen = &myScreen;
+char c1 = (pScreen->*pmf)();
+char c2 = (myScreen.*pmf2)(0, 0);
+```
+**成员指针的类型别名**
+```cpp
+using Action = char (Screen::*)(Screen::pos, Screen::pos) const;
+
+Action get = &Screen::get;
+
+Screen& action(Screen&, Action = &Screen::get);
+```
+
+**成员指针函数表**
+```cpp
+class Screen {
+public:
+    Screen& home();
+    Screen& back();
+    // ...
+    using Action = Screen& (Screen::*)();
+    enum Directions {HOME, BACK};
+    Screen& move(Directions);
+private:
+    static Action Menu[];
+};
+Screen& Screen::move(Directions cm)
+{
+    return (this->*Menu[cm])();
+}
+Screen::Action Screen::Menu[] = { &Screen::home, &Screen::back };
+
+// shiyong
+Screen myScreen;
+myScreen.move(Screen::HOME);
+```
+
+## 19.4.3 将成员函数用作可调用对象
+* 使用 function
+* 使用 mem_fn
+* 使用 bind
+
+# 19.5 嵌套类
+```cpp
+class TextQuery {
+public:
+    class QueryResult;
+    // ...
+};
+// 外部定义
+class TextQuery::QueryResult {
+    friend std::ostream& print(std::ostream&, const QueryResult&);
+public:
+    QueryResult(std::string, ...);
+};
+// 成员函数
+TextQuery::QueryResult::QueryResult(string s, ...): ... {}
+```
+
+# 19.6 union
+```cpp
+union Token {
+    char cval;
+    int ival;
+    double dval;
+};
+
+Token first_token = {'a'};
+Token last_token; // 未初始化
+
+last_token.cval = 'z';
+```
+
+**匿名union**
+
+**使用类管理union成员**
+
+# 19.7 局部类
+局部类的所有成员都必须完整定义在类的内部
+
+# 19.8 固有的不可移植的特性
+## 19.8.1 位域
+位域的类型必须是整形或枚举类型
+```c++
+typedef unsigned int Bit;
+class File {
+    Bit mode: 2; // mode 占 2 位
+    Bit modified: 1;
+    // ...
+public:
+    enum modes { READ = 01, WRITE = 02, EXECUTE = 03 };
+    // ...
+};
+
+// 使用
+void File::write()
+{
+    modified = 1;
+    // ...
+}
+File &File::open(File::modes m)
+{
+    mode |= READ;
+    // ...
+}
+```
+## 19.8.2 volatile
+编译器不应该优化
+
+只有 volatile 的成员函数才能被 volatile 的对象调用
+
+## 19.8.3 extern "C"
