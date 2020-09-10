@@ -393,7 +393,7 @@ struct Data
     string s;
 };
 
-Data val1 = {0, "Anna};
+Data val1 = {0, "Anna"};
 ```
 
 ## 7.5.6 字面值常量类

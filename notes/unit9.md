@@ -23,7 +23,7 @@ const_reference //
 C c;
 C c1(c2); //拷贝
 C c(b, e); //构造c，将be指定范围内的元素拷贝到c(array不支持)
-C c(a, b, c...); //列表初始化
+C c{a, b, c...}; //列表初始化
 
 //赋值与swap
 c1 = c2 //
@@ -208,9 +208,9 @@ while (it != lst.end())
     else
         ++it;
 ```
- ## 9.3.4 特殊的forward_list操作
- 单向链表
- ```c++
+## 9.3.4 特殊的forward_list操作
+单向链表
+```c++
 lst.before_begin()
 lst.cbefore_begin()
 

@@ -57,7 +57,7 @@ cin.clear(cin.rdstate() & ~cin.failbit & ~cin.badbit) ;
 ```
 ## 8.1.3 管理输出缓冲
 
-###刷新输出缓冲区
+### 刷新输出缓冲区
 ```c++
 cout << "hi!" << endl; //输出hi和换行，刷新缓冲区
 cout << "hi!" << flush; //只刷新
