@@ -137,7 +137,7 @@ StrBlobPtr& StrBlobPtr::operator--()
 }
 ```
 ### 区分后置运算符
-后置版本赢爱返回对象的原值，返回的形式是一个值而非引用
+后置版本应该返回对象的原值，返回的形式是一个值而非引用
 ```c++
 class StrBlobPtr{
 public:
